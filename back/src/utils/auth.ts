@@ -4,5 +4,8 @@ import { AppDataSource } from "../../DataSource"
 
 
 export const auth = betterAuth({
-    database: typeormAdapter(AppDataSource)
+    database: typeormAdapter(AppDataSource),
+    emailAndPassword: { 
+        enabled: true, 
+    }, 
 });
