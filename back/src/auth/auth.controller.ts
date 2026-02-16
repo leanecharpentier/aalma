@@ -1,17 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res } from '@nestjs/common';
-import { AuthService } from './auth.service';;
+
+import { Controller, Req, Res, All, Get, Post } from '@nestjs/common';
+import { auth } from 'src/utils/auth';
+import { toNodeHandler } from 'better-auth/node';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get()
-  getAuth(@Req() req: Request, @Res() res: Response) {
-    return this.authService.getAuth(req, res);
-  }
-
-  @Post()
-  postAuth(@Req() req: Request, @Res() res: Response) {
-    return this.authService.postAuth(req, res);
-  }
+  @Post('signin')
+    async signIn(@Req() req, @Res() res) {
+      const { email, password } = req.body;
+      const result = await this.authService.signIn(email, password);
+      res.json(result);
+    }
+    
+  @Post('signup')
+    async signUp(@Req() req, @Res() res) {
+      const { name, email, password } = req.body;
+      const result = await this.authService.signUp(name, email, password);
+      res.json(result);
+    }
 }

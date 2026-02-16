@@ -3,13 +3,23 @@ import { auth } from 'src/utils/auth';
 
 @Injectable()
 export class AuthService {
-  async getAuth(@Req() req: Request, @Res() res: Response) {
-    // Utilisez votre logique d'authentification ici
-    return auth(req, res, 'GET');
+  async signIn(email: string, password: string) {
+    return await auth.api.signInEmail({
+      body: {
+        email,
+        password
+      },
+    })
   }
-  
-  async postAuth(@Req() req: Request, @Res() res: Response) {
-    // Utilisez votre logique d'authentification ici
-    return auth(req, res, 'POST');
+
+  async signUp(name: string, email: string, password: string) {
+    console.log(name)
+    return await auth.api.signUpEmail({
+      body: {
+        name,
+        email,
+        password
+      },
+    })
   }
 }
