@@ -18,7 +18,13 @@ export class AuthController {
   @Post('signup')
     async signUp(@Req() req, @Res() res) {
       const { name, email, password } = req.body;
-      const result = await this.authService.signUp(name, email, password);
+      const result = await this.authService.signUp(req, name, email, password);
+      res.json(result);
+    }
+  
+  @Post('signout')
+    async signOut(@Req() req, @Res() res) {
+      const result = await this.authService.signOut(req);
       res.json(result);
     }
 }
