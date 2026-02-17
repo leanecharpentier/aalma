@@ -3,6 +3,7 @@ import "reflect-metadata"
 import { DataSource } from "typeorm";
 import path from "path";
 
+
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: process.env.DATABASE_HOST ,
@@ -11,7 +12,7 @@ export const AppDataSource = new DataSource({
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
     entities: [path.join(__dirname, "typeorm/entities/**/*.{ts,js}")],
-    migrations: [path.join(__dirname, "typeorm/migrations/**/*.js")],
+    migrations: [path.join(__dirname, "typeorm/migrations/**/*.ts")],
     synchronize: true,
     logging: false,
 })
