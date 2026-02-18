@@ -16,6 +16,7 @@ export class AuthService {
         password,
         rememberMe: true,
       },
+      asResponse: true,
     })
   }
 
@@ -33,6 +34,7 @@ export class AuthService {
         email,
         password
       },
+      asResponse: true,
       headers: await req.headers,
     })
   }
@@ -44,6 +46,16 @@ export class AuthService {
   async signOut(@Req() req) {
     return await auth.api.signOut({
       headers: await req.headers,
+      asResponse: true,
     });
+  }
+
+  /**
+   * Récupère la session de l'utilisateur à partir de la requête, en vérifiant les en-têtes d'authentification.
+   * @param request 
+   * @returns Session de l'utilisateur ou null si la session est invalide ou expirée
+   */
+  async getSession(request: Request) {
+    return auth.api.getSession({ headers: request.headers });
   }
 }

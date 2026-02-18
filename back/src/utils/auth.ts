@@ -9,17 +9,17 @@ export const auth = betterAuth({
         enabled: true, 
     }, 
     user: {
-    additionalFields: {
-        firstname: {
-            type: "string",
-            required: true,
-            defaultValue: "",
-        },
-        lastname: {
-            type: "string", 
-            required: true,
-            defaultValue: "",
-        },
+        additionalFields: {
+            firstname: {
+                type: "string",
+                required: true,
+                defaultValue: "",
+            },
+            lastname: {
+                type: "string", 
+                required: true,
+                defaultValue: "",
+            },
         },
         modelName: "user", 
     },
