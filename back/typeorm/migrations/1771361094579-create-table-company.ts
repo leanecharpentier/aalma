@@ -22,6 +22,16 @@ export class CreateTableCompany1771361094579 implements MigrationInterface {
                     isNullable: true,
                 },
                 {
+                    name: 'googleDomain',
+                    type: 'text',
+                    isNullable: true,
+                },
+                {
+                    name: 'microsoftTenantId',
+                    type: 'text',
+                    isNullable: true,
+                },
+                {
                     name: 'createdAt',
                     type: 'date',
                 },

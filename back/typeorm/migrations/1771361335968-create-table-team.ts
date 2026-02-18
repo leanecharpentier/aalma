@@ -19,7 +19,6 @@ export class CreateTableCompany1771361335968 implements MigrationInterface {
                     {
                         name: 'company_id',
                         type: 'int',
-                        isNullable: true,
                     },
                     {
                         name: 'createdAt',

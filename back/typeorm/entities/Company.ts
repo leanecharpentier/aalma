@@ -13,6 +13,12 @@ export class Company {
   @Column('text', { name: 'color_id', nullable: true })
   color_id?: number;
 
+  @Column({ nullable: true })
+  googleDomain: string; 
+
+  @Column({ name: 'microsoft_tenant_id', nullable: true })
+  microsoftTenantId: string; 
+
   @Column('date', { name: 'createdAt' })
   createdAt!: Date;
 

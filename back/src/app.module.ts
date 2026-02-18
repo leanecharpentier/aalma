@@ -3,9 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { CompanyModule } from './company/company.module';
+import { CompanyModule } from './company/company.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule],
+  imports: [ConfigModule.forRoot(), AuthModule, CompanyModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,8 +1,10 @@
-import { Injectable, Req, Res } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Req, Res } from '@nestjs/common';
+import { CompanyService } from 'src/company/company.service';
 import { auth } from 'src/utils/auth';
 
 @Injectable()
 export class AuthService {
+  constructor(private readonly companyService: CompanyService) {}
   /**
    * Connecte un utilisateur avec son email et mot de passe.
    * @param email Email de l'utilisateur
@@ -57,5 +59,39 @@ export class AuthService {
    */
   async getSession(request: Request) {
     return auth.api.getSession({ headers: request.headers });
+  }
+
+  async signInSocial(companyId: number, provider: string, @Req() req, @Res() res) {
+    const company = await this.companyService.findOne(companyId );
+
+    if (!company) throw new NotFoundException('Organisation introuvable');
+
+    if (provider === 'microsoft' && !company.microsoftTenantId) {
+      throw new BadRequestException('Microsoft non configuré pour cette organisation');
+    }
+      
+    if (provider === 'google' && !company.googleDomain)
+      throw new BadRequestException('Google non configuré pour cette organisation');
+
+    return await auth.api.signInSocial({
+      body: {
+        provider,                                    
+        callbackURL: `${process.env.APP_URL}/auth/callback`,
+      },
+      asResponse: true,
+    });
+  }
+
+  async callback(companyId: number, @Req() req, @Res() res) {
+    const result = await auth.handler(req as any);
+    const body = await result.json();
+
+    const company = await this.companyService.findOne(companyId);
+    const userEmail: string = body.user?.email ?? '';
+
+    if (company.googleDomain && !userEmail.endsWith(`@${company.googleDomain}`)) {
+      return res.status(403).json({ error: 'Email non autorisé pour cette organisation' });
+    }
+    return result;
   }
 }
