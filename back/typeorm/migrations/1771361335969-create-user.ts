@@ -12,6 +12,10 @@ export class CreateUser1771361335969  implements MigrationInterface {
             isPrimary: true,
           },
           {
+            name: 'name',
+            type: 'text',
+          },
+          {
             name: 'firstname',
             type: 'text',
           },

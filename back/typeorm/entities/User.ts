@@ -7,13 +7,13 @@ export class User {
   @PrimaryColumn('text')
   id!: string;
 
-  @Column()
+  @Column('text', { name: 'name' })
   name: string; 
   
-  @Column()
+  @Column('text', { name: 'firstname' })
   firstname: string;
   
-  @Column()
+  @Column('text', { name: 'lastname' })
   lastname: string;
   
   @BeforeInsert()

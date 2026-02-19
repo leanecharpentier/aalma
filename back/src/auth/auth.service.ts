@@ -89,7 +89,7 @@ export class AuthService {
     const company = await this.companyService.findOne(companyId);
     const userEmail: string = body.user?.email ?? '';
 
-    if (company.googleDomain && !userEmail.endsWith(`@${company.googleDomain}`)) {
+    if (company?.googleDomain && !userEmail.endsWith(`@${company.googleDomain}`)) {
       return res.status(403).json({ error: 'Email non autorisé pour cette organisation' });
     }
     return result;
