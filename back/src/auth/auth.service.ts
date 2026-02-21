@@ -62,7 +62,7 @@ export class AuthService {
   }
 
   async signInSocial(companyId: number, provider: string, @Req() req, @Res() res) {
-    const company = await this.companyService.findOne(companyId );
+    const company = await this.companyService.findOne(companyId);
 
     if (!company) throw new NotFoundException('Organisation introuvable');
 
@@ -82,16 +82,74 @@ export class AuthService {
     });
   }
 
-  async callback(companyId: number, @Req() req, @Res() res) {
-    const result = await auth.handler(req as any);
-    const body = await result.json();
-
-    const company = await this.companyService.findOne(companyId);
-    const userEmail: string = body.user?.email ?? '';
-
-    if (company?.googleDomain && !userEmail.endsWith(`@${company.googleDomain}`)) {
-      return res.status(403).json({ error: 'Email non autorisé pour cette organisation' });
+  async callback(provider: string,companyId: number, @Req() req, @Res() res) {
+    const protocol = req.protocol || 'http';
+    const host = req.headers['host'];
+    const fullUrl = `${protocol}://${host}${req.url}`;
+    
+    const webHeaders = new Headers();
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (value === undefined) continue;
+      const strValue = Array.isArray(value) ? value.join(', ') : String(value);
+      webHeaders.set(key, strValue);
     }
-    return result;
+    const bodyChunks: Buffer[] = [];
+    for await (const chunk of req) {
+      bodyChunks.push(chunk);
+    }
+    const bodyBuffer = Buffer.concat(bodyChunks);
+
+    const webRequest = new Request(fullUrl, {
+      method: req.method,
+      headers: webHeaders,
+      body: ['GET', 'HEAD'].includes(req.method) ? undefined : bodyBuffer,
+    });
+
+    const result = await auth.handler(webRequest);
+
+    if (!result) {
+      return res.status(500).json({ error: 'Auth handler returned nothing' });
+    }
+
+    if (result.status === 302 || result.status === 301) {
+
+        result.headers.forEach((value, key) => {
+          if (!res.headersSent) res.setHeader(key, value);
+        });
+
+        const sessionToken = result.headers.get('set-cookie')
+          ?.split(',')
+          .find(c => c.includes('better-auth.session_token'))
+          ?.split(';')[0]
+          ?.split('=')
+          .slice(1)
+          .join('=');
+
+        let session: any = null; 
+        if (sessionToken) {
+          session = await auth.api.getSession({
+            headers: new Headers({ cookie: `better-auth.session_token=${sessionToken}` })
+          });
+          
+          const userEmail = session?.user?.email ?? '';
+          const company = await this.companyService.findOne(companyId);
+
+          if (provider === 'google') {
+            if (company?.googleDomain && !userEmail.endsWith(`@${company.googleDomain}`)) {
+              return res.status(403).json({ error: 'Email non autorisé pour cette organisation' });
+            }
+          }
+
+          if (provider === 'microsoft') {
+            if (company?.microsoftTenantId && !userEmail.endsWith(`@${company.microsoftTenantId}`)) {
+              return res.status(403).json({ error: 'Email non autorisé pour cette organisation' });
+            }
+          }
+        }    
+      return res.status(200).json({ 
+        success: true,
+        user: session?.user 
+      });
+    }
   }
 }
