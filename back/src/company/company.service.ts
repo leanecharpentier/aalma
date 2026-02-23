@@ -3,10 +3,18 @@ import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { Company } from "typeorm/entities/Company";
 import { AppDataSource } from "DataSource";
+import { InsertResult } from "typeorm";
+import { UpdateResult } from "typeorm/browser";
+import { DeleteResult } from "typeorm/browser";
 
 @Injectable()
 export class CompanyService {
-  async create(createCompanyDto: CreateCompanyDto) {
+  /**
+   * Create a new company in the database.
+   * @param createCompanyDto data to create a new company
+   * @returns Promise<InsertResult>
+   */
+  async create(createCompanyDto: CreateCompanyDto): Promise<InsertResult> {
     return await AppDataSource.getRepository(Company)
       .createQueryBuilder("company")
       .insert()
@@ -16,7 +24,7 @@ export class CompanyService {
 
   /**
    * Return all companies in the database.
-   * @returns Company[]
+   * @returns Promise<Company[]>
    */
   async findAll(): Promise<Company[]> {
     return await AppDataSource.getRepository(Company)
@@ -27,7 +35,7 @@ export class CompanyService {
   /**
    * Return a company with the given id.
    * @param {number} id Company id
-   * @returns Company | null
+   * @returns Promise<Company | null>
    */
   async findOne(id: number): Promise<Company | null> {
     return await AppDataSource.getRepository(Company)
@@ -36,7 +44,16 @@ export class CompanyService {
       .getOne();
   }
 
-  async update(id: number, updateCompanyDto: UpdateCompanyDto) {
+  /**
+   * Update a company with the given id.
+   * @param id Company id
+   * @param updateCompanyDto Updated company data
+   * @returns Promise<UpdateResult>
+   */
+  async update(
+    id: number,
+    updateCompanyDto: UpdateCompanyDto,
+  ): Promise<UpdateResult> {
     return await AppDataSource.getRepository(Company)
       .createQueryBuilder("company")
       .update()
@@ -48,9 +65,9 @@ export class CompanyService {
   /**
    * Delete a company with the given id.
    * @param {number} id Company id
-   * @returns DeleteResult
+   * @returns Promise<DeleteResult>
    */
-  async remove(id: number) {
+  async remove(id: number): Promise<DeleteResult> {
     return await AppDataSource.getRepository(Company)
       .createQueryBuilder("company")
       .delete()
