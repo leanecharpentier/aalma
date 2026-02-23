@@ -1,0 +1,30 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from "@nestjs/common";
+import { RoleService } from "./role.service";
+
+@Controller("role")
+export class RoleController {
+  constructor(private readonly roleService: RoleService) {}
+
+  @Get()
+  findAll() {
+    return this.roleService.findAll();
+  }
+
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.roleService.findOne(+id);
+  }
+
+  @Get(":id/employees")
+  findEmployees(@Param("id") id: string) {
+    return this.roleService.findEmployees(+id);
+  }
+}
