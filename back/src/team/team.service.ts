@@ -45,6 +45,19 @@ export class TeamService {
   }
 
   /**
+   * Get all employees of a team with the given id.
+   * @param id number id of the team to get employees of
+   * @returns Promise<Team | null>
+   */
+  async findEmployees(id: number): Promise<Team | null> {
+    return await AppDataSource.getRepository(Team)
+      .createQueryBuilder("team")
+      .leftJoinAndSelect("team.users", "user")
+      .where("team.id = :id", { id })
+      .getOne();
+  }
+
+  /**
    * Update a team with the given id.
    * @param id number id of the team to update
    * @param updateTeamDto UpdateTeamDto data to update the team with
