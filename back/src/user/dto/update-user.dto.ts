@@ -7,6 +7,6 @@ export class UpdateUserDto extends PartialType(
   name?: string;
   firstname?: string;
   lastname?: string;
-  role_id?: string;
-  team_id?: string;
+  role_id?: number;
+  team_id?: number;
 }

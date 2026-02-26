@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { Role } from "./Role";
 import { Team } from "./Team";
+import { AppDataSource } from "DataSource";
 
 @Entity("user")
 export class User {
@@ -41,11 +42,11 @@ export class User {
   @Column("text", { name: "image", nullable: true })
   image?: string;
 
-  @Column("text", { name: "role_id", nullable: true })
-  role_id?: string;
+  @Column("integer", { name: "role_id", nullable: true })
+  role_id?: number;
 
-  @Column("text", { name: "team_id", nullable: true })
-  team_id?: string;
+  @Column("integer", { name: "team_id", nullable: true })
+  team_id?: number;
 
   @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;
@@ -61,4 +62,29 @@ export class User {
   @ManyToOne(() => Team, { nullable: true })
   @JoinColumn({ name: "team_id" })
   team?: Team;
+
+  async getRole(): Promise<Role | null> {
+    const user = await AppDataSource.getRepository(User).findOne({
+      where: { id: this.id },
+      relations: { role: true },
+    });
+    return user?.role || null;
+  }
+
+  async getTeam(): Promise<Team | null> {
+    const user = await AppDataSource.getRepository(User).findOne({
+      where: { id: this.id },
+      relations: { team: true },
+    });
+    return user?.team || null;
+  }
+
+  async getCompanyId(): Promise<number> {
+    const team = await this.getTeam();
+    if (team) {
+      const company = await team.getCompany();
+      return company?.id || 0;
+    }
+    return 0;
+  }
 }

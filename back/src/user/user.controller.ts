@@ -7,6 +7,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
+  UploadedFile,
+  UseInterceptors,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -14,6 +17,9 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { AuthGuard } from "src/auth/auth.guard";
 import { RolesGuard } from "src/role/roles.guards";
 import { Roles } from "src/role/role.decorator";
+import { memoryStorage } from "multer";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { ImportUsersDto } from "./dto/import-user.dto";
 
 @Controller("user")
 export class UserController {
@@ -24,6 +30,18 @@ export class UserController {
   @Roles(["Super Admin", "Admin"])
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @Post("import")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(["Super Admin", "Admin"])
+  @UseInterceptors(FileInterceptor("file", { storage: memoryStorage() }))
+  import(
+    @Req() req: Request,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: ImportUsersDto,
+  ) {
+    return this.userService.import(req, file, body);
   }
 
   @Get()

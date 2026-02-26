@@ -4,6 +4,7 @@ export class CreateUserDto {
   firstname: string;
   lastname: string;
   email: string;
-  role_id: string;
-  team_id?: string;
+  emailVerified: boolean;
+  role_id: number;
+  team_id?: number;
 }

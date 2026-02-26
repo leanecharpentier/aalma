@@ -28,7 +28,7 @@ export class TeamController {
 
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin", "Admin", "CEO", "HR"])
+  @Roles(["Super Admin", "Admin", "HR"])
   findAll() {
     return this.teamService.findAll();
   }
