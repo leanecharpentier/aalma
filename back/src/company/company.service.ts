@@ -24,11 +24,28 @@ export class CompanyService {
     connectedUser: User,
   ): Promise<InsertResult | { success: boolean; message: string }> {
     try {
-      return await AppDataSource.getRepository(Company)
+      const existingCompany = await AppDataSource.getRepository(Company)
         .createQueryBuilder("company")
-        .insert()
-        .values(createCompanyDto)
-        .execute();
+        .where("company.name = :name", { name: createCompanyDto.name })
+        .getOne();
+      if (!existingCompany) {
+        return await AppDataSource.getRepository(Company)
+          .createQueryBuilder("company")
+          .insert()
+          .values(createCompanyDto)
+          .execute();
+      } else {
+        this.activityLogService.log({
+          userId: connectedUser.id,
+          action: "company.created",
+          status: ACTIVITY_FAIL,
+          details: `Company ${createCompanyDto.name} already exists`,
+        });
+        return {
+          success: false,
+          message: `Company ${createCompanyDto.name} already exists`,
+        };
+      }
     } catch (e) {
       this.activityLogService.log({
         userId: connectedUser.id,

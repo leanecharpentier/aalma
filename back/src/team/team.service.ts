@@ -24,11 +24,31 @@ export class TeamService {
     connectedUser: User,
   ): Promise<InsertResult | { success: boolean; message: string }> {
     try {
-      return await AppDataSource.getRepository(Team)
+      const existingTeam = await AppDataSource.getRepository(Team)
         .createQueryBuilder("team")
-        .insert()
-        .values(createTeamDto)
-        .execute();
+        .where("team.name = :name AND team.company_id = :company_id", {
+          name: createTeamDto.name,
+          company_id: createTeamDto.company_id,
+        })
+        .getOne();
+      if (!existingTeam) {
+        return await AppDataSource.getRepository(Team)
+          .createQueryBuilder("team")
+          .insert()
+          .values(createTeamDto)
+          .execute();
+      } else {
+        this.activityLogService.log({
+          userId: connectedUser.id,
+          action: "team.created",
+          status: ACTIVITY_FAIL,
+          details: `Team ${createTeamDto.name} already exists in this company`,
+        });
+        return {
+          success: false,
+          message: `Team ${createTeamDto.name} already exists in this company`,
+        };
+      }
     } catch (e) {
       this.activityLogService.log({
         userId: connectedUser.id,
