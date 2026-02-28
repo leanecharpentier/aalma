@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from "@nestjs/common";
 import { TeamService } from "./team.service";
 import { CreateTeamDto } from "./dto/create-team.dto";
@@ -14,16 +15,30 @@ import { UpdateTeamDto } from "./dto/update-team.dto";
 import { AuthGuard } from "src/auth/auth.guard";
 import { RolesGuard } from "src/role/roles.guards";
 import { Roles } from "src/role/role.decorator";
+import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
 
 @Controller("team")
 export class TeamController {
-  constructor(private readonly teamService: TeamService) {}
+  constructor(
+    private readonly teamService: TeamService,
+    private readonly activityLogService: ActivityLogService,
+  ) {}
 
   @Post()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(["Super Admin", "Admin"])
-  create(@Body() createTeamDto: CreateTeamDto) {
-    return this.teamService.create(createTeamDto);
+  async create(@Req() req, @Body() createTeamDto: CreateTeamDto) {
+    const connectedUser = (req as any).user;
+    const result = await this.teamService.create(createTeamDto, connectedUser);
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "team.created",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 
   @Get()
@@ -50,14 +65,40 @@ export class TeamController {
   @Patch(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(["Super Admin", "Admin"])
-  update(@Param("id") id: string, @Body() updateTeamDto: UpdateTeamDto) {
-    return this.teamService.update(+id, updateTeamDto);
+  async update(
+    @Req() req,
+    @Param("id") id: string,
+    @Body() updateTeamDto: UpdateTeamDto,
+  ) {
+    const connectedUser = (req as any).user;
+    const result = await this.teamService.update(
+      +id,
+      updateTeamDto,
+      connectedUser,
+    );
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "team.updated",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 
   @Delete(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(["Super Admin", "Admin"])
-  remove(@Param("id") id: string) {
-    return this.teamService.remove(+id);
+  async remove(@Req() req, @Param("id") id: string) {
+    const connectedUser = (req as any).user;
+    const result = await this.teamService.remove(+id, connectedUser);
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "team.deleted",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 }

@@ -6,20 +6,38 @@ import { Team } from "typeorm/entities/Team";
 import { InsertResult } from "typeorm";
 import { UpdateResult } from "typeorm/browser";
 import { DeleteResult } from "typeorm/browser";
+import { User } from "typeorm/entities/User";
+import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
 
 @Injectable()
 export class TeamService {
+  constructor(private readonly activityLogService: ActivityLogService) {}
+
   /**
    * Create a new team in the database.
    * @param createTeamDto CreateTeamDto data to create a new team
    * @returns Promise<InsertResult>
    */
-  async create(createTeamDto: CreateTeamDto): Promise<InsertResult> {
-    return await AppDataSource.getRepository(Team)
-      .createQueryBuilder("team")
-      .insert()
-      .values(createTeamDto)
-      .execute();
+  async create(
+    createTeamDto: CreateTeamDto,
+    connectedUser: User,
+  ): Promise<InsertResult | { success: boolean; message: string }> {
+    try {
+      return await AppDataSource.getRepository(Team)
+        .createQueryBuilder("team")
+        .insert()
+        .values(createTeamDto)
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "team.created",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 
   /**
@@ -66,13 +84,24 @@ export class TeamService {
   async update(
     id: number,
     updateTeamDto: UpdateTeamDto,
-  ): Promise<UpdateResult> {
-    return await AppDataSource.getRepository(Team)
-      .createQueryBuilder("team")
-      .update()
-      .set(updateTeamDto)
-      .where("team.id = :id", { id })
-      .execute();
+    connectedUser: User,
+  ): Promise<UpdateResult | { success: boolean; message: string }> {
+    try {
+      return await AppDataSource.getRepository(Team)
+        .createQueryBuilder("team")
+        .update()
+        .set(updateTeamDto)
+        .where("team.id = :id", { id })
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "team.updated",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 
   /**
@@ -80,11 +109,24 @@ export class TeamService {
    * @param id number id of the team to delete
    * @returns Promise<DeleteResult>
    */
-  async remove(id: number): Promise<DeleteResult> {
-    return await AppDataSource.getRepository(Team)
-      .createQueryBuilder("team")
-      .delete()
-      .where("team.id = :id", { id })
-      .execute();
+  async remove(
+    id: number,
+    connectedUser: User,
+  ): Promise<DeleteResult | { success: boolean; message: string }> {
+    try {
+      return await AppDataSource.getRepository(Team)
+        .createQueryBuilder("team")
+        .delete()
+        .where("team.id = :id", { id })
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "team.deleted",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 }
