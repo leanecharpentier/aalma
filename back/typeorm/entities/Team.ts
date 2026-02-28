@@ -12,7 +12,7 @@ import {
 } from "typeorm";
 import { User } from "./User";
 import { Company } from "./Company";
-import { AppDataSource } from "DataSource";
+import { AppDataSource } from "../../DataSource";
 
 @Entity("team")
 export class Team {

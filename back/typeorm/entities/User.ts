@@ -10,7 +10,7 @@ import {
 } from "typeorm";
 import { Role } from "./Role";
 import { Team } from "./Team";
-import { AppDataSource } from "DataSource";
+import { AppDataSource } from "../../DataSource";
 
 @Entity("user")
 export class User {
