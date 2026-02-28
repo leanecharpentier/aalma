@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from "@nestjs/common";
 import { CompanyService } from "./company.service";
 import { CreateCompanyDto } from "./dto/create-company.dto";
@@ -14,16 +15,33 @@ import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { AuthGuard } from "src/auth/auth.guard";
 import { Roles } from "src/role/role.decorator";
 import { RolesGuard } from "src/role/roles.guards";
+import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
 
 @Controller("company")
 export class CompanyController {
-  constructor(private readonly companyService: CompanyService) {}
+  constructor(
+    private readonly companyService: CompanyService,
+    private readonly activityLogService: ActivityLogService,
+  ) {}
 
   @Post()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(["Super Admin"])
-  create(@Body() createCompanyDto: CreateCompanyDto) {
-    return this.companyService.create(createCompanyDto);
+  async create(@Req() req, @Body() createCompanyDto: CreateCompanyDto) {
+    const connectedUser = (req as any).user;
+    const result = await this.companyService.create(
+      createCompanyDto,
+      connectedUser,
+    );
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "company.created",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 
   @Get()
@@ -43,14 +61,40 @@ export class CompanyController {
   @Patch(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(["Super Admin"])
-  update(@Param("id") id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companyService.update(+id, updateCompanyDto);
+  async update(
+    @Req() req,
+    @Param("id") id: string,
+    @Body() updateCompanyDto: UpdateCompanyDto,
+  ) {
+    const connectedUser = (req as any).user;
+    const result = await this.companyService.update(
+      +id,
+      updateCompanyDto,
+      connectedUser,
+    );
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "company.updated",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 
   @Delete(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(["Super Admin"])
-  remove(@Param("id") id: string) {
-    return this.companyService.remove(+id);
+  async remove(@Req() req, @Param("id") id: string) {
+    const connectedUser = (req as any).user;
+    const result = await this.companyService.remove(+id, connectedUser);
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "company.deleted",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 }

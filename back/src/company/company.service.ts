@@ -6,20 +6,38 @@ import { AppDataSource } from "DataSource";
 import { InsertResult } from "typeorm";
 import { UpdateResult } from "typeorm/browser";
 import { DeleteResult } from "typeorm/browser";
+import { User } from "typeorm/entities/User";
+import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
 
 @Injectable()
 export class CompanyService {
+  constructor(private readonly activityLogService: ActivityLogService) {}
+
   /**
    * Create a new company in the database.
    * @param createCompanyDto data to create a new company
    * @returns Promise<InsertResult>
    */
-  async create(createCompanyDto: CreateCompanyDto): Promise<InsertResult> {
-    return await AppDataSource.getRepository(Company)
-      .createQueryBuilder("company")
-      .insert()
-      .values(createCompanyDto)
-      .execute();
+  async create(
+    createCompanyDto: CreateCompanyDto,
+    connectedUser: User,
+  ): Promise<InsertResult | { success: boolean; message: string }> {
+    try {
+      return await AppDataSource.getRepository(Company)
+        .createQueryBuilder("company")
+        .insert()
+        .values(createCompanyDto)
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "company.created",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 
   /**
@@ -53,13 +71,24 @@ export class CompanyService {
   async update(
     id: number,
     updateCompanyDto: UpdateCompanyDto,
-  ): Promise<UpdateResult> {
-    return await AppDataSource.getRepository(Company)
-      .createQueryBuilder("company")
-      .update()
-      .set(updateCompanyDto)
-      .where("company.id = :id", { id: id })
-      .execute();
+    connectedUser: User,
+  ): Promise<UpdateResult | { success: boolean; message: string }> {
+    try {
+      return await AppDataSource.getRepository(Company)
+        .createQueryBuilder("company")
+        .update()
+        .set(updateCompanyDto)
+        .where("company.id = :id", { id: id })
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "company.updated",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 
   /**
@@ -67,11 +96,24 @@ export class CompanyService {
    * @param {number} id Company id
    * @returns Promise<DeleteResult>
    */
-  async remove(id: number): Promise<DeleteResult> {
-    return await AppDataSource.getRepository(Company)
-      .createQueryBuilder("company")
-      .delete()
-      .where("company.id = :id", { id: id })
-      .execute();
+  async remove(
+    id: number,
+    connectedUser: User,
+  ): Promise<DeleteResult | { success: boolean; message: string }> {
+    try {
+      return await AppDataSource.getRepository(Company)
+        .createQueryBuilder("company")
+        .delete()
+        .where("company.id = :id", { id: id })
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "company.deleted",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 }
