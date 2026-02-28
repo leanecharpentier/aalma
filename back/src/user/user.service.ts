@@ -10,27 +10,53 @@ import { DeleteResult } from "typeorm/browser";
 import { Team } from "typeorm/entities/Team";
 import { ImportUsersDto } from "./dto/import-user.dto";
 import * as XLSX from "xlsx";
+import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { ACTIVITY_FAIL, ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
 
 @Injectable()
 export class UserService {
+  constructor(private readonly activityLogService: ActivityLogService) {}
+
   /**
    * Create a new user in the database.
    * @param createUserDto data to create a new user
    * @returns Promise<InsertResult>
    */
-  async create(createUserDto: CreateUserDto): Promise<InsertResult> {
+  async create(
+    createUserDto: CreateUserDto,
+    connectedUser: User,
+  ): Promise<InsertResult | { success: boolean; message: string }> {
     const generateId = customAlphabet(
       "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
       32,
     );
     createUserDto.id = generateId(32);
-    createUserDto.name = `${createUserDto.firstname} ${createUserDto.lastname}`;
-    return await AppDataSource.getRepository(User)
-      .createQueryBuilder("user")
-      .insert()
-      .into(User)
-      .values(createUserDto)
-      .execute();
+    if (createUserDto.name) {
+      createUserDto.firstname = createUserDto.name.split(" ")[0];
+      createUserDto.lastname = createUserDto.name.split(" ")[1];
+    } else {
+      createUserDto.name = `${createUserDto.firstname} ${createUserDto.lastname}`;
+    }
+    createUserDto.emailVerified = false;
+
+    try {
+      const result = await AppDataSource.getRepository(User)
+        .createQueryBuilder("user")
+        .insert()
+        .into(User)
+        .values(createUserDto)
+        .execute();
+
+      return result;
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "user.created",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 
   /**
@@ -154,17 +180,30 @@ export class UserService {
         createUserDto.team_id = team.id;
       }
       try {
-        await this.create(createUserDto);
+        await this.create(createUserDto, connectedUser);
         successCount++;
       } catch (error) {
         errors.push({ user, error: error.message });
       }
     }
 
-    let message = `${successCount} users imported successfully.`;
-    if (errors.length > 0) {
-      message += ` However, ${errors.length} users could not be imported. Reasons include: ${errors.map((e) => e.error).join("; ")}. Please check the data and try again.`;
+    let message = "";
+    if (successCount > 0) {
+      message += `${successCount} users imported successfully.`;
     }
+    if (errors.length > 0) {
+      if (successCount > 0) {
+        message += ` However,`;
+      }
+      message += ` ${errors.length} users could not be imported. Reasons include: ${errors.map((e) => e.error).join("; ")}. Please check the data and try again.`;
+    }
+
+    await this.activityLogService.log({
+      userId: connectedUser.id,
+      action: "user.imported",
+      status: errors.length === 0 ? ACTIVITY_SUCCESS : ACTIVITY_FAIL,
+      details: `{ message: ${message} }`,
+    });
 
     return {
       success: errors.length === 0,
@@ -203,7 +242,8 @@ export class UserService {
   async update(
     id: string,
     updateUserDto: UpdateUserDto,
-  ): Promise<UpdateResult> {
+    connectedUser: User,
+  ): Promise<UpdateResult | { success: boolean; message: string }> {
     if (updateUserDto.firstname) {
       await this.findOne(id).then((user) => {
         updateUserDto.name = `${updateUserDto.firstname} ${user?.lastname}`;
@@ -218,12 +258,22 @@ export class UserService {
       updateUserDto.firstname = updateUserDto.name?.split(" ")[0];
       updateUserDto.lastname = updateUserDto.name?.split(" ")[1];
     }
-    return await AppDataSource.getRepository(User)
-      .createQueryBuilder()
-      .update(User)
-      .set(updateUserDto)
-      .where("id = :id", { id: id })
-      .execute();
+    try {
+      return await AppDataSource.getRepository(User)
+        .createQueryBuilder()
+        .update(User)
+        .set(updateUserDto)
+        .where("id = :id", { id: id })
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "user.updated",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 
   /**
@@ -231,12 +281,25 @@ export class UserService {
    * @param id string User id
    * @returns Promise<DeleteResult>
    */
-  async remove(id: string): Promise<DeleteResult> {
-    return await AppDataSource.getRepository(User)
-      .createQueryBuilder()
-      .delete()
-      .from(User)
-      .where("id = :id", { id })
-      .execute();
+  async remove(
+    id: string,
+    connectedUser: User,
+  ): Promise<DeleteResult | { success: boolean; message: string }> {
+    try {
+      return await AppDataSource.getRepository(User)
+        .createQueryBuilder()
+        .delete()
+        .from(User)
+        .where("id = :id", { id })
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "user.deleted",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 }

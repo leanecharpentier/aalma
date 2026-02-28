@@ -20,16 +20,30 @@ import { Roles } from "src/role/role.decorator";
 import { memoryStorage } from "multer";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ImportUsersDto } from "./dto/import-user.dto";
+import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
 
 @Controller("user")
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly activityLogService: ActivityLogService,
+  ) {}
 
   @Post()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(["Super Admin", "Admin"])
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Req() req: Request, @Body() createUserDto: CreateUserDto) {
+    const connectedUser = (req as any).user;
+    const result = await this.userService.create(createUserDto, connectedUser);
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "user.created",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 
   @Post("import")
@@ -61,14 +75,41 @@ export class UserController {
   @Patch(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(["Super Admin", "Admin"])
-  update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  async update(
+    @Req() req: Request,
+    @Param("id") id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    const connectedUser = (req as any).user;
+    const result = await this.userService.update(
+      id,
+      updateUserDto,
+      connectedUser,
+    );
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "user.updated",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 
   @Delete(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(["Super Admin", "Admin"])
-  remove(@Param("id") id: string) {
-    return this.userService.remove(id);
+  async remove(@Req() req: Request, @Param("id") id: string) {
+    const connectedUser = (req as any).user;
+    const result = await this.userService.remove(id, connectedUser);
+    if ("affected" in result) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "user.deleted",
+        status: ACTIVITY_SUCCESS,
+        details: `Deleted user : ${result.affected}`,
+      });
+    }
+    return result;
   }
 }
