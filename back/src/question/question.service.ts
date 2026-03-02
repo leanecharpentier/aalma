@@ -15,7 +15,7 @@ export class QuestionService {
     try {
       const existingQuestion = await AppDataSource.getRepository(Question)
         .createQueryBuilder("question")
-        .where("question.name = :name", {
+        .where("question.label = :name", {
           name: createQuestionDto.label,
         })
         .getOne();
