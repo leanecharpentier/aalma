@@ -8,6 +8,7 @@ import { UserModule } from "./user/user.module";
 import { TeamModule } from "./team/team.module";
 import { RoleModule } from "./role/role.module";
 import { ActivityLogModule } from "./activity-log/activity-log.module";
+import { QuestionModule } from './question/question.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ActivityLogModule } from "./activity-log/activity-log.module";
     TeamModule,
     RoleModule,
     ActivityLogModule,
+    QuestionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
