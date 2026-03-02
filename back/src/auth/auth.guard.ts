@@ -4,16 +4,15 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+import { auth } from "src/utils/auth";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService) {}
+  constructor() {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-
-    const session = await this.authService.getSession(request);
+    const session = await auth.api.getSession({ headers: request.headers });
 
     if (!session?.user) {
       throw new UnauthorizedException("Session invalide ou expirée");

@@ -1,13 +1,12 @@
 import { Module } from "@nestjs/common";
-import { CompanyService } from "./company.service";
-import { CompanyController } from "./company.controller";
+import { TeamService } from "./team.service";
+import { TeamController } from "./team.controller";
 import { AuthGuardModule } from "src/auth/auth-guard.module";
 import { ActivityLogModule } from "src/activity-log/activity-log.module";
 
 @Module({
   imports: [AuthGuardModule, ActivityLogModule],
-  controllers: [CompanyController],
-  providers: [CompanyService],
-  exports: [CompanyService],
+  controllers: [TeamController],
+  providers: [TeamService],
 })
-export class CompanyModule {}
+export class TeamModule {}

@@ -1,35 +1,48 @@
-import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn, BeforeInsert, OneToMany } from 'typeorm';
-import { Color } from './Color';
-import { Team } from './Team';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { Color } from "./Color";
+import { Team } from "./Team";
 
-@Entity('company')
+@Entity("company")
 export class Company {
-  @PrimaryColumn('integer')
+  @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  name: string; 
+  name: string;
 
-  @Column('text', { name: 'color_id', nullable: true })
+  @Column("text", { name: "color_id", nullable: true })
   color_id?: number;
 
   @Column({ nullable: true })
-  googleDomain: string; 
+  googleDomain: string;
 
-  @Column({ name: 'microsoft_tenant_id', nullable: true })
-  microsoftTenantId: string; 
+  @Column({ name: "microsoft_tenant_id", nullable: true })
+  microsoftTenantId: string;
 
-  @Column('date', { name: 'createdAt' })
-  createdAt!: Date;
+  @CreateDateColumn({ name: "createdAt" })
+  createdAt: Date = new Date();
 
-  @Column('date', { name: 'updatedAt' })
-  updatedAt!: Date;
+  @UpdateDateColumn({ name: "updatedAt" })
+  updatedAt: Date = new Date();
 
   @ManyToOne(() => Color, { nullable: true })
-  @JoinColumn({ name: 'color_id' })
+  @JoinColumn({ name: "color_id" })
   color?: Color;
-  
-  @OneToMany(() => Team, team => team.company, { nullable: true })
-  @JoinColumn({ name: 'company_id' })
+
+  @OneToMany(
+    () => Team,
+    (team) => team.company,
+    { nullable: true },
+  )
+  @JoinColumn({ name: "company_id" })
   teams?: Team[];
 }

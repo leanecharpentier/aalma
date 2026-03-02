@@ -1,0 +1,27 @@
+import { AppDataSource } from "DataSource";
+import { Injectable } from "@nestjs/common";
+import { Role } from "typeorm/entities/Role";
+
+@Injectable()
+export class RoleService {
+  async findAll() {
+    return await AppDataSource.getRepository(Role)
+      .createQueryBuilder("role")
+      .getMany();
+  }
+
+  async findOne(id: number) {
+    return await AppDataSource.getRepository(Role)
+      .createQueryBuilder("role")
+      .where("role.id = :id", { id })
+      .getOne();
+  }
+
+  async findEmployees(id: number) {
+    return await AppDataSource.getRepository(Role)
+      .createQueryBuilder("role")
+      .leftJoinAndSelect("role.users", "user")
+      .where("role.id = :id", { id })
+      .getOne();
+  }
+}

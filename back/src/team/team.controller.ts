@@ -9,36 +9,39 @@ import {
   UseGuards,
   Req,
 } from "@nestjs/common";
-import { CompanyService } from "./company.service";
-import { CreateCompanyDto } from "./dto/create-company.dto";
-import { UpdateCompanyDto } from "./dto/update-company.dto";
+import { TeamService } from "./team.service";
+import { CreateTeamDto } from "./dto/create-team.dto";
+import { UpdateTeamDto } from "./dto/update-team.dto";
 import { AuthGuard } from "src/auth/auth.guard";
-import { Roles } from "src/role/role.decorator";
 import { RolesGuard } from "src/role/roles.guards";
+import { Roles } from "src/role/role.decorator";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
 import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
-import { SUPER_ADMIN_ROLE_ID } from "typeorm/entities/Role";
+import {
+  ADMIN_ROLE_ID,
+  CEO_ROLE_ID,
+  HR_ROLE_ID,
+  MANAGER_ROLE_ID,
+  SUPER_ADMIN_ROLE_ID,
+} from "typeorm/entities/Role";
 
-@Controller("company")
-export class CompanyController {
+@Controller("team")
+export class TeamController {
   constructor(
-    private readonly companyService: CompanyService,
+    private readonly teamService: TeamService,
     private readonly activityLogService: ActivityLogService,
   ) {}
 
   @Post()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([SUPER_ADMIN_ROLE_ID])
-  async create(@Req() req, @Body() createCompanyDto: CreateCompanyDto) {
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
+  async create(@Req() req, @Body() createTeamDto: CreateTeamDto) {
     const connectedUser = (req as any).user;
-    const result = await this.companyService.create(
-      createCompanyDto,
-      connectedUser,
-    );
+    const result = await this.teamService.create(createTeamDto, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,
-        action: "company.created",
+        action: "team.created",
         status: ACTIVITY_SUCCESS,
       });
     }
@@ -47,36 +50,49 @@ export class CompanyController {
 
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([SUPER_ADMIN_ROLE_ID])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   findAll() {
-    return this.companyService.findAll();
+    return this.teamService.findAll();
   }
 
   @Get(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([SUPER_ADMIN_ROLE_ID])
+  @Roles([
+    SUPER_ADMIN_ROLE_ID,
+    ADMIN_ROLE_ID,
+    CEO_ROLE_ID,
+    HR_ROLE_ID,
+    MANAGER_ROLE_ID,
+  ])
   findOne(@Param("id") id: string) {
-    return this.companyService.findOne(+id);
+    return this.teamService.findOne(+id);
+  }
+
+  @Get(":id/employees")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
+  findEmployees(@Param("id") id: string) {
+    return this.teamService.findEmployees(+id);
   }
 
   @Patch(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([SUPER_ADMIN_ROLE_ID])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
   async update(
     @Req() req,
     @Param("id") id: string,
-    @Body() updateCompanyDto: UpdateCompanyDto,
+    @Body() updateTeamDto: UpdateTeamDto,
   ) {
     const connectedUser = (req as any).user;
-    const result = await this.companyService.update(
+    const result = await this.teamService.update(
       +id,
-      updateCompanyDto,
+      updateTeamDto,
       connectedUser,
     );
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,
-        action: "company.updated",
+        action: "team.updated",
         status: ACTIVITY_SUCCESS,
       });
     }
@@ -85,14 +101,14 @@ export class CompanyController {
 
   @Delete(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([SUPER_ADMIN_ROLE_ID])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
-    const result = await this.companyService.remove(+id, connectedUser);
+    const result = await this.teamService.remove(+id, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,
-        action: "company.deleted",
+        action: "team.deleted",
         status: ACTIVITY_SUCCESS,
       });
     }

@@ -1,29 +1,53 @@
-import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn, BeforeInsert, OneToMany } from 'typeorm';
-import { User } from './User';
-import { Company } from './Company';
+import {
+  Column,
+  Entity,
+  PrimaryColumn,
+  ManyToOne,
+  JoinColumn,
+  BeforeInsert,
+  OneToMany,
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { User } from "./User";
+import { Company } from "./Company";
+import { AppDataSource } from "../../DataSource";
 
-@Entity('team')
+@Entity("team")
 export class Team {
-  @PrimaryColumn('integer')
+  @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  name: string; 
+  name: string;
 
-  @Column('text', { name: 'company_id', nullable: true })
-  company_id?: number;
+  @Column("text", { name: "company_id" })
+  company_id: number;
 
-  @Column('date', { name: 'createdAt' })
+  @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;
 
-  @Column('date', { name: 'updatedAt' })
+  @UpdateDateColumn({ name: "updatedAt" })
   updatedAt!: Date;
 
-  @OneToMany(() => User, user => user.team, { nullable: true })
-  @JoinColumn({ name: 'team_id' })
+  @OneToMany(
+    () => User,
+    (user) => user.team,
+    { nullable: true },
+  )
+  @JoinColumn({ name: "team_id" })
   users?: User[];
 
   @ManyToOne(() => Company, { nullable: true })
-  @JoinColumn({ name: 'company_id' })
+  @JoinColumn({ name: "company_id" })
   company?: Company;
+
+  async getCompany(): Promise<Company | null> {
+    const team = await AppDataSource.getRepository(Team).findOne({
+      where: { id: this.id },
+      relations: { company: true },
+    });
+    return team?.company || null;
+  }
 }
