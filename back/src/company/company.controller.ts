@@ -17,6 +17,7 @@ import { Roles } from "src/role/role.decorator";
 import { RolesGuard } from "src/role/roles.guards";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
 import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
+import { SUPER_ADMIN_ROLE_ID } from "typeorm/entities/Role";
 
 @Controller("company")
 export class CompanyController {
@@ -27,7 +28,7 @@ export class CompanyController {
 
   @Post()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin"])
+  @Roles([SUPER_ADMIN_ROLE_ID])
   async create(@Req() req, @Body() createCompanyDto: CreateCompanyDto) {
     const connectedUser = (req as any).user;
     const result = await this.companyService.create(
@@ -46,21 +47,21 @@ export class CompanyController {
 
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin"])
+  @Roles([SUPER_ADMIN_ROLE_ID])
   findAll() {
     return this.companyService.findAll();
   }
 
   @Get(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin"])
+  @Roles([SUPER_ADMIN_ROLE_ID])
   findOne(@Param("id") id: string) {
     return this.companyService.findOne(+id);
   }
 
   @Patch(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin"])
+  @Roles([SUPER_ADMIN_ROLE_ID])
   async update(
     @Req() req,
     @Param("id") id: string,
@@ -84,7 +85,7 @@ export class CompanyController {
 
   @Delete(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin"])
+  @Roles([SUPER_ADMIN_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
     const result = await this.companyService.remove(+id, connectedUser);

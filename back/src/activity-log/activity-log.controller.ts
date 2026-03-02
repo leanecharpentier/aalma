@@ -3,6 +3,7 @@ import { ActivityLogService } from "./activity-log.service";
 import { AuthGuard } from "src/auth/auth.guard";
 import { RolesGuard } from "src/role/roles.guards";
 import { Roles } from "src/role/role.decorator";
+import { ADMIN_ROLE_ID, SUPER_ADMIN_ROLE_ID } from "typeorm/entities/Role";
 
 @Controller("activity-log")
 export class ActivityLogController {
@@ -10,14 +11,14 @@ export class ActivityLogController {
 
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin", "Admin"])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
   findAll() {
     return this.activityLogService.findAll();
   }
 
   @Get(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin", "Admin"])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
   findOne(@Param("id") id: string) {
     return this.activityLogService.findOne(id);
   }

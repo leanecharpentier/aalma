@@ -20,12 +20,12 @@ export class RolesGuard implements CanActivate {
       .where("user.id = :id", { id: request.user.id })
       .getOne();
     if (user) {
-      return this.matchRoles(roles, user.role?.name ? [user.role.name] : []);
+      return this.matchRoles(roles, user.role?.id ? [user.role.id] : []);
     }
     return false;
   }
 
-  matchRoles(allowedRoles: string[], userRoles: string[]): boolean {
+  matchRoles(allowedRoles: number[], userRoles: number[]): boolean {
     return allowedRoles.some((role) => userRoles.includes(role));
   }
 }

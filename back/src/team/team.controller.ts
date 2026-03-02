@@ -17,6 +17,13 @@ import { RolesGuard } from "src/role/roles.guards";
 import { Roles } from "src/role/role.decorator";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
 import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
+import {
+  ADMIN_ROLE_ID,
+  CEO_ROLE_ID,
+  HR_ROLE_ID,
+  MANAGER_ROLE_ID,
+  SUPER_ADMIN_ROLE_ID,
+} from "typeorm/entities/Role";
 
 @Controller("team")
 export class TeamController {
@@ -27,7 +34,7 @@ export class TeamController {
 
   @Post()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin", "Admin"])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
   async create(@Req() req, @Body() createTeamDto: CreateTeamDto) {
     const connectedUser = (req as any).user;
     const result = await this.teamService.create(createTeamDto, connectedUser);
@@ -43,28 +50,34 @@ export class TeamController {
 
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin", "Admin", "HR"])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   findAll() {
     return this.teamService.findAll();
   }
 
   @Get(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin", "Admin", "CEO", "HR", "Manager"])
+  @Roles([
+    SUPER_ADMIN_ROLE_ID,
+    ADMIN_ROLE_ID,
+    CEO_ROLE_ID,
+    HR_ROLE_ID,
+    MANAGER_ROLE_ID,
+  ])
   findOne(@Param("id") id: string) {
     return this.teamService.findOne(+id);
   }
 
   @Get(":id/employees")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin", "Admin", "HR"])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   findEmployees(@Param("id") id: string) {
     return this.teamService.findEmployees(+id);
   }
 
   @Patch(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin", "Admin"])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
   async update(
     @Req() req,
     @Param("id") id: string,
@@ -88,7 +101,7 @@ export class TeamController {
 
   @Delete(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(["Super Admin", "Admin"])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
     const result = await this.teamService.remove(+id, connectedUser);
