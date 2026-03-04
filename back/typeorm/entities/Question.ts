@@ -4,10 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { QuestionType } from "./QuestionType";
+import { Proposition } from "./Proposition";
 
 @Entity("question")
 export class Question {
@@ -26,7 +28,15 @@ export class Question {
   @UpdateDateColumn({ name: "updatedAt" })
   updatedAt!: Date;
 
-  @ManyToOne(() => QuestionType, { nullable: true })
+  @ManyToOne(() => QuestionType)
   @JoinColumn({ name: "type_id" })
   type?: QuestionType;
+
+  @OneToMany(
+    () => Proposition,
+    (proposition) => proposition.question,
+    { nullable: true },
+  )
+  @JoinColumn({ name: "question_id" })
+  questions?: Question[];
 }
