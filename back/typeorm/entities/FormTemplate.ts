@@ -8,6 +8,8 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Form } from "./Form";
+import { FormTemplateQuestion } from "./FormTemplateQuestion";
+import { Question } from "./Question";
 
 @Entity("form_template")
 export class FormTemplate {
@@ -29,4 +31,12 @@ export class FormTemplate {
   )
   @JoinColumn({ name: "template_id" })
   forms?: Form[];
+
+  @OneToMany(
+    () => FormTemplateQuestion,
+    (ftq) => ftq.template,
+    { nullable: true },
+  )
+  @JoinColumn({ name: "question_id" })
+  questions?: FormTemplateQuestion[];
 }

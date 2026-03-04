@@ -1,42 +1,45 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Param,
-  Patch,
   Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
   Req,
   UseGuards,
 } from "@nestjs/common";
+import { FormTemplateService } from "./form-template.service";
+import { CreateFormTemplateDto } from "./dto/create-form-template.dto";
+import { UpdateFormTemplateDto } from "./dto/update-form-template.dto";
+import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
 import { AuthGuard } from "src/auth/auth.guard";
-import { Roles } from "src/role/role.decorator";
 import { RolesGuard } from "src/role/roles.guards";
-import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
+import { Roles } from "src/role/role.decorator";
 import {
   ADMIN_ROLE_ID,
   HR_ROLE_ID,
   SUPER_ADMIN_ROLE_ID,
 } from "typeorm/entities/Role";
-import { CreatePropositionDto } from "./dto/create-proposition.dto";
-import { UpdatePropositionDto } from "./dto/update-proposition.dto";
-import { PropositionService } from "./proposition.service";
 
-@Controller("proposition")
-export class PropositionController {
+@Controller("form-template")
+export class FormTemplateController {
   constructor(
-    private readonly propositionService: PropositionService,
+    private readonly formTemplateService: FormTemplateService,
     private readonly activityLogService: ActivityLogService,
   ) {}
 
   @Post()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID])
-  async create(@Req() req, @Body() createPropositionDto: CreatePropositionDto) {
+  async create(
+    @Req() req,
+    @Body() createFormTemplateDto: CreateFormTemplateDto,
+  ) {
     const connectedUser = (req as any).user;
-    const result = await this.propositionService.create(
-      createPropositionDto,
+    const result = await this.formTemplateService.create(
+      createFormTemplateDto,
       connectedUser,
     );
     if (!("success" in result && result.success === false)) {
@@ -49,11 +52,18 @@ export class PropositionController {
     return result;
   }
 
+  @Get()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
+  async findAll() {
+    return await this.formTemplateService.findAll();
+  }
+
   @Get(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async findOne(@Param("id") id: string) {
-    return await this.propositionService.findOne(+id);
+    return await this.formTemplateService.findOne(+id);
   }
 
   @Patch(":id")
@@ -62,15 +72,15 @@ export class PropositionController {
   async update(
     @Req() req,
     @Param("id") id: string,
-    @Body() updatePropositionDto: UpdatePropositionDto,
+    @Body() updateFormTemplateDto: UpdateFormTemplateDto,
   ) {
     const connectedUser = (req as any).user;
-    const result = await this.propositionService.update(
+    const result = await this.formTemplateService.update(
       +id,
-      updatePropositionDto,
+      updateFormTemplateDto,
       connectedUser,
     );
-    if (!("success" in result && result.success === false)) {
+    if (result && !("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,
         action: "proposition.updated",
@@ -85,7 +95,7 @@ export class PropositionController {
   @Roles([SUPER_ADMIN_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
-    const result = await this.propositionService.remove(+id, connectedUser);
+    const result = await this.formTemplateService.remove(+id, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,

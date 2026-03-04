@@ -10,6 +10,7 @@ import { RoleModule } from "./role/role.module";
 import { ActivityLogModule } from "./activity-log/activity-log.module";
 import { QuestionModule } from './question/question.module';
 import { PropositionModule } from './proposition/proposition.module';
+import { FormTemplateModule } from './form-template/form-template.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PropositionModule } from './proposition/proposition.module';
     ActivityLogModule,
     QuestionModule,
     PropositionModule,
+    FormTemplateModule,
   ],
   controllers: [AppController],
   providers: [AppService],

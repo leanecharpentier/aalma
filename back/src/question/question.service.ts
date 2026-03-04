@@ -7,6 +7,7 @@ import { ActivityLogService } from "src/activity-log/activity-log.service";
 import { User } from "typeorm/entities/User";
 import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
 import { PropositionService } from "src/proposition/proposition.service";
+import { FormTemplateQuestion } from "typeorm/entities/FormTemplateQuestion";
 
 @Injectable()
 export class QuestionService {
@@ -99,6 +100,11 @@ export class QuestionService {
 
   async remove(id: number, connectedUser: User) {
     try {
+      await AppDataSource.getRepository(FormTemplateQuestion)
+        .createQueryBuilder()
+        .delete()
+        .where("question_id = :id", { id })
+        .execute();
       return await AppDataSource.getRepository(Question)
         .createQueryBuilder("question")
         .delete()

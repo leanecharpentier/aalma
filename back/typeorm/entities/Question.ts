@@ -10,6 +10,8 @@ import {
 } from "typeorm";
 import { QuestionType } from "./QuestionType";
 import { Proposition } from "./Proposition";
+import { FormTemplateQuestion } from "./FormTemplateQuestion";
+import { FormTemplate } from "./FormTemplate";
 
 @Entity("question")
 export class Question {
@@ -39,4 +41,12 @@ export class Question {
   )
   @JoinColumn({ name: "question_id" })
   propositions?: Proposition[];
+
+  @OneToMany(
+    () => FormTemplateQuestion,
+    (ftq) => ftq.question,
+    { nullable: true },
+  )
+  @JoinColumn({ name: "question_id" })
+  templates?: FormTemplateQuestion[];
 }
