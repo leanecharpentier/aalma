@@ -38,5 +38,5 @@ export class Question {
     { nullable: true },
   )
   @JoinColumn({ name: "question_id" })
-  questions?: Question[];
+  propositions?: Proposition[];
 }

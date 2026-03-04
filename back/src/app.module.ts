@@ -9,6 +9,7 @@ import { TeamModule } from "./team/team.module";
 import { RoleModule } from "./role/role.module";
 import { ActivityLogModule } from "./activity-log/activity-log.module";
 import { QuestionModule } from './question/question.module';
+import { PropositionModule } from './proposition/proposition.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { QuestionModule } from './question/question.module';
     RoleModule,
     ActivityLogModule,
     QuestionModule,
+    PropositionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

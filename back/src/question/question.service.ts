@@ -6,10 +6,14 @@ import { Question } from "typeorm/entities/Question";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
 import { User } from "typeorm/entities/User";
 import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
+import { PropositionService } from "src/proposition/proposition.service";
 
 @Injectable()
 export class QuestionService {
-  constructor(private readonly activityLogService: ActivityLogService) {}
+  constructor(
+    private readonly activityLogService: ActivityLogService,
+    private readonly propositionService: PropositionService,
+  ) {}
 
   async create(createQuestionDto: CreateQuestionDto, connectedUser: User) {
     try {
@@ -20,21 +24,29 @@ export class QuestionService {
         })
         .getOne();
       if (!existingQuestion) {
-        return await AppDataSource.getRepository(Question)
+        const result = await AppDataSource.getRepository(Question)
           .createQueryBuilder("question")
           .insert()
           .values(createQuestionDto)
           .execute();
+
+        if (createQuestionDto.type_id !== 3 && createQuestionDto.propositions) {
+          createQuestionDto.propositions.forEach((proposition) => {
+            proposition.question_id = result.identifiers[0].id;
+            this.propositionService.create(proposition, connectedUser);
+          });
+        }
+        return result;
       } else {
         this.activityLogService.log({
           userId: connectedUser.id,
           action: "question.created",
           status: ACTIVITY_FAIL,
-          details: `Team ${createQuestionDto.label} already exists`,
+          details: `Question "${createQuestionDto.label}" already exists`,
         });
         return {
           success: false,
-          message: `Team ${createQuestionDto.label} already exists`,
+          message: `Question "${createQuestionDto.label}" already exists`,
         };
       }
     } catch (e) {
@@ -57,6 +69,7 @@ export class QuestionService {
   async findOne(id: number) {
     return await AppDataSource.getRepository(Question)
       .createQueryBuilder("question")
+      .leftJoinAndSelect("question.propositions", "proposition")
       .where("question.id = :id", { id })
       .getOne();
   }
@@ -94,7 +107,7 @@ export class QuestionService {
     } catch (e) {
       this.activityLogService.log({
         userId: connectedUser.id,
-        action: "team.deleted",
+        action: "question.deleted",
         status: ACTIVITY_FAIL,
         details: e.detail,
       });
