@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Form } from "./Form";
 import { User } from "./User";
+import { Question } from "./Question";
 
 @Entity("answer")
 export class Answer {
@@ -19,10 +20,13 @@ export class Answer {
   content: string;
 
   @Column()
-  user_id: number;
+  user_id: string;
 
   @Column()
   form_id: number;
+
+  @Column()
+  question_id: number;
 
   @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;
@@ -37,4 +41,8 @@ export class Answer {
   @ManyToOne(() => Form)
   @JoinColumn({ name: "form_id" })
   form?: Form;
+
+  @ManyToOne(() => Question)
+  @JoinColumn({ name: "question_id" })
+  question?: Question;
 }

@@ -77,7 +77,6 @@ export class PropositionService {
         .where("proposition.id = :id", { id })
         .execute();
     } catch (e) {
-      console.log(e);
       this.activityLogService.log({
         userId: connectedUser.id,
         action: "proposition.updated",

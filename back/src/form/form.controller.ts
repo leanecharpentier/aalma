@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  Query,
 } from "@nestjs/common";
 import { FormService } from "./form.service";
 import { CreateFormDto } from "./dto/create-form.dto";
@@ -56,8 +57,8 @@ export class FormController {
   @Get(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
-  async findOne(@Param("id") id: string) {
-    return await this.formService.findOne(+id);
+  async findOne(@Query() query, @Param("id") id: string) {
+    return await this.formService.findOne(+id, query?.answers);
   }
 
   @Patch(":id")
@@ -93,7 +94,7 @@ export class FormController {
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,
-        action: "form.template.deleted",
+        action: "form.deleted",
         status: ACTIVITY_SUCCESS,
       });
     }

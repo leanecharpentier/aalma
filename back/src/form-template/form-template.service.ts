@@ -78,7 +78,6 @@ export class FormTemplateService {
 
     if (template?.questions && template.questions.length > 0) {
       const questionIds = template.questions.map((q) => q.question_id);
-      console.log();
 
       const fullQuestions = await AppDataSource.getRepository(Question)
         .createQueryBuilder("question")

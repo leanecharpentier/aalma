@@ -12,6 +12,7 @@ import { QuestionType } from "./QuestionType";
 import { Proposition } from "./Proposition";
 import { FormTemplateQuestion } from "./FormTemplateQuestion";
 import { FormTemplate } from "./FormTemplate";
+import { Answer } from "./Answer";
 
 @Entity("question")
 export class Question {
@@ -49,4 +50,12 @@ export class Question {
   )
   @JoinColumn({ name: "question_id" })
   templates?: FormTemplateQuestion[];
+
+  @OneToMany(
+    () => Answer,
+    (answer) => answer.question,
+    { nullable: true },
+  )
+  @JoinColumn({ name: "question_id" })
+  answers?: Answer[];
 }

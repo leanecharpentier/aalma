@@ -65,16 +65,20 @@ export class FormService {
       .getMany();
   }
 
-  async findOne(id: number) {
-    const form = await AppDataSource.getRepository(Form)
+  async findOne(id: number, answer?: boolean) {
+    const query = await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
       .leftJoinAndSelect("form.template", "form_template")
       .leftJoinAndSelect("form_template.questions", "questions")
       .leftJoinAndSelect("questions.question", "question")
       .leftJoinAndSelect("question.propositions", "propositions")
-      .where("form.id = :id", { id })
-      .getOne();
-    return form;
+      .where("form.id = :id", { id });
+
+    if (answer) {
+      query.leftJoinAndSelect("form.answers", "answers");
+    }
+    const result = await query.getOne();
+    return result;
   }
 
   async update(id: number, updateFormDto: UpdateFormDto, connectedUser: User) {
@@ -89,7 +93,6 @@ export class FormService {
       }
       return await this.findOne(id);
     } catch (e) {
-      console.log(e);
       this.activityLogService.log({
         userId: connectedUser.id,
         action: "form.updated",

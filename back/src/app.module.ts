@@ -12,6 +12,7 @@ import { QuestionModule } from './question/question.module';
 import { PropositionModule } from './proposition/proposition.module';
 import { FormTemplateModule } from './form-template/form-template.module';
 import { FormModule } from './form/form.module';
+import { AnswerModule } from './answer/answer.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { FormModule } from './form/form.module';
     PropositionModule,
     FormTemplateModule,
     FormModule,
+    AnswerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
