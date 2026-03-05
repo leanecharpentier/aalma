@@ -54,6 +54,14 @@ export class FormController {
     return await this.formService.findAll();
   }
 
+  @Get("current")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
+  async findCurrent(@Req() req) {
+    const connectedUser = (req as any).user;
+    return await this.formService.findCurrent(connectedUser);
+  }
+
   @Get(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])

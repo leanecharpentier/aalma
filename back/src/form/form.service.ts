@@ -65,6 +65,25 @@ export class FormService {
       .getMany();
   }
 
+  async findCurrent(connectedUser: User) {
+    const user = await AppDataSource.getRepository(User)
+      .createQueryBuilder("user")
+      .where("user.id = :id", { id: connectedUser.id })
+      .getOne();
+    return await AppDataSource.getRepository(Form)
+      .createQueryBuilder("form")
+      .leftJoinAndSelect("form.answers", "answers")
+      .where(
+        "form.startDate <= :today AND form.endDate >= :today AND form.company_id = :company_id AND (answers.id IS NULL OR answers.user_id != :user_id)",
+        {
+          today: new Date(),
+          company_id: await user?.getCompanyId(),
+          user_id: user?.id,
+        },
+      )
+      .getMany();
+  }
+
   async findOne(id: number, answer?: boolean) {
     const query = await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
