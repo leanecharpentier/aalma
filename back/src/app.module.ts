@@ -11,6 +11,7 @@ import { ActivityLogModule } from "./activity-log/activity-log.module";
 import { QuestionModule } from './question/question.module';
 import { PropositionModule } from './proposition/proposition.module';
 import { FormTemplateModule } from './form-template/form-template.module';
+import { FormModule } from './form/form.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { FormTemplateModule } from './form-template/form-template.module';
     QuestionModule,
     PropositionModule,
     FormTemplateModule,
+    FormModule,
   ],
   controllers: [AppController],
   providers: [AppService],

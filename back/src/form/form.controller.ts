@@ -9,11 +9,11 @@ import {
   Req,
   UseGuards,
 } from "@nestjs/common";
-import { FormTemplateService } from "./form-template.service";
-import { CreateFormTemplateDto } from "./dto/create-form-template.dto";
-import { UpdateFormTemplateDto } from "./dto/update-form-template.dto";
-import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
+import { FormService } from "./form.service";
+import { CreateFormDto } from "./dto/create-form.dto";
+import { UpdateFormDto } from "./dto/update-form.dto";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
 import { AuthGuard } from "src/auth/auth.guard";
 import { RolesGuard } from "src/role/roles.guards";
 import { Roles } from "src/role/role.decorator";
@@ -23,29 +23,23 @@ import {
   SUPER_ADMIN_ROLE_ID,
 } from "typeorm/entities/Role";
 
-@Controller("form-template")
-export class FormTemplateController {
+@Controller("form")
+export class FormController {
   constructor(
-    private readonly formTemplateService: FormTemplateService,
+    private readonly formService: FormService,
     private readonly activityLogService: ActivityLogService,
   ) {}
 
   @Post()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([SUPER_ADMIN_ROLE_ID])
-  async create(
-    @Req() req,
-    @Body() createFormTemplateDto: CreateFormTemplateDto,
-  ) {
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
+  async create(@Req() req, @Body() createFormDto: CreateFormDto) {
     const connectedUser = (req as any).user;
-    const result = await this.formTemplateService.create(
-      createFormTemplateDto,
-      connectedUser,
-    );
+    const result = await this.formService.create(createFormDto, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,
-        action: "form.template.created",
+        action: "form.created",
         status: ACTIVITY_SUCCESS,
       });
     }
@@ -56,34 +50,34 @@ export class FormTemplateController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async findAll() {
-    return await this.formTemplateService.findAll();
+    return await this.formService.findAll();
   }
 
   @Get(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async findOne(@Param("id") id: string) {
-    return await this.formTemplateService.findOne(+id);
+    return await this.formService.findOne(+id);
   }
 
   @Patch(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([SUPER_ADMIN_ROLE_ID])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async update(
     @Req() req,
     @Param("id") id: string,
-    @Body() updateFormTemplateDto: UpdateFormTemplateDto,
+    @Body() updateFormDto: UpdateFormDto,
   ) {
     const connectedUser = (req as any).user;
-    const result = await this.formTemplateService.update(
+    const result = await this.formService.update(
       +id,
-      updateFormTemplateDto,
+      updateFormDto,
       connectedUser,
     );
     if (result && !("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,
-        action: "form.template.updated",
+        action: "form.updated",
         status: ACTIVITY_SUCCESS,
       });
     }
@@ -92,10 +86,10 @@ export class FormTemplateController {
 
   @Delete(":id")
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([SUPER_ADMIN_ROLE_ID])
+  @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
-    const result = await this.formTemplateService.remove(+id, connectedUser);
+    const result = await this.formService.remove(+id, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,

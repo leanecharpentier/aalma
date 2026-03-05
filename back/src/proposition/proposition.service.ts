@@ -74,9 +74,10 @@ export class PropositionService {
         .createQueryBuilder("proposition")
         .update()
         .set(updatePropositionDto)
-        .where("propsition.id = :id", { id })
+        .where("proposition.id = :id", { id })
         .execute();
     } catch (e) {
+      console.log(e);
       this.activityLogService.log({
         userId: connectedUser.id,
         action: "proposition.updated",

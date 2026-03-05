@@ -18,15 +18,13 @@ export class FormTemplateService {
     connectedUser: User,
   ) {
     try {
-      const existingProposition = await AppDataSource.getRepository(
-        FormTemplate,
-      )
+      const existingTemplate = await AppDataSource.getRepository(FormTemplate)
         .createQueryBuilder("form_template")
         .where("form_template.name = :name", {
           name: createFormTemplateDto.name,
         })
         .getOne();
-      if (!existingProposition) {
+      if (!existingTemplate) {
         const result = await AppDataSource.getRepository(FormTemplate)
           .createQueryBuilder("form_template")
           .insert()
@@ -134,7 +132,7 @@ export class FormTemplateService {
     } catch (e) {
       this.activityLogService.log({
         userId: connectedUser.id,
-        action: "proposition.updated",
+        action: "form.template.updated",
         status: ACTIVITY_FAIL,
         details: e.detail,
       });
