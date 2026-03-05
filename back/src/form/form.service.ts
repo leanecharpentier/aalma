@@ -6,10 +6,14 @@ import { Form } from "typeorm/entities/Form";
 import { User } from "typeorm/entities/User";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
 import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
+import { NotificationService } from "src/notification/notification.service";
 
 @Injectable()
 export class FormService {
-  constructor(private readonly activityLogService: ActivityLogService) {}
+  constructor(
+    private readonly activityLogService: ActivityLogService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   async create(createFormDto: CreateFormDto, connectedUser: User) {
     try {
@@ -82,6 +86,66 @@ export class FormService {
         },
       )
       .getMany();
+  }
+
+  async answeredForm(id: number) {
+    const form = await AppDataSource.getRepository(Form)
+      .createQueryBuilder("form")
+      .leftJoinAndSelect("form.answers", "answers")
+      .where("form.id = :id", { id })
+      .getOne();
+    if (!form) {
+      return { success: false, message: "Form does not exist" };
+    }
+    return await AppDataSource.getRepository(User)
+      .createQueryBuilder("user")
+      .leftJoin("user.team", "team")
+      .leftJoin(
+        "answer",
+        "answer",
+        "answer.user_id = user.id AND answer.form_id = :formId",
+        {
+          formId: id,
+        },
+      )
+      .where("team.company_id = :company_id", {
+        company_id: form?.company_id,
+      })
+      .andWhere("answer.id IS NOT NULL")
+      .getMany();
+  }
+
+  async callEmployeesAgain(id: number) {
+    const form = await AppDataSource.getRepository(Form)
+      .createQueryBuilder("form")
+      .leftJoinAndSelect("form.answers", "answers")
+      .where("form.id = :id", { id })
+      .getOne();
+    if (!form) {
+      return { success: false, message: "Form does not exist" };
+    }
+    const employeesWhoDidNotAnswer = await AppDataSource.getRepository(User)
+      .createQueryBuilder("user")
+      .leftJoin("user.team", "team")
+      .leftJoin(
+        "answer",
+        "answer",
+        "answer.user_id = user.id AND answer.form_id = :formId",
+        {
+          formId: id,
+        },
+      )
+      .where("team.company_id = :company_id", {
+        company_id: form?.company_id,
+      })
+      .andWhere("answer.id IS NULL")
+      .getMany();
+    await Promise.all(
+      employeesWhoDidNotAnswer.map((employee) =>
+        this.notificationService.callAgain(employee, form),
+      ),
+    );
+    return { success: true, message: "Notifications sent" };
   }
 
   async findOne(id: number, answer?: boolean) {
