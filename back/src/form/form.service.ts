@@ -119,7 +119,13 @@ export class FormService {
     const form = await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
       .leftJoinAndSelect("form.answers", "answers")
-      .where("form.id = :id", { id })
+      .where(
+        "form.id = :id AND form.startDate <= :today AND form.endDate >= :today",
+        {
+          today: new Date(),
+          id,
+        },
+      )
       .getOne();
     if (!form) {
       return { success: false, message: "Form does not exist" };

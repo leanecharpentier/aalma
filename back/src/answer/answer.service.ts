@@ -5,6 +5,7 @@ import { AppDataSource } from "DataSource";
 import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
 import { Answer } from "typeorm/entities/Answer";
+import { Form } from "typeorm/entities/Form";
 
 @Injectable()
 export class AnswerService {
@@ -24,17 +25,40 @@ export class AnswerService {
         )
         .getOne();
       if (!existingAnswer) {
-        const result = await AppDataSource.getRepository(Answer)
-          .createQueryBuilder("answer")
-          .insert()
-          .values({ ...createAnswerDto, user_id: connectedUser.id })
-          .execute();
+        const form = await AppDataSource.getRepository(Form)
+          .createQueryBuilder("form")
+          .where(
+            "form.startDate <= :today AND form.endDate >= :today AND form.id = :id",
+            {
+              today: new Date(),
+              form: createAnswerDto.form_id,
+            },
+          )
+          .getOne();
+        if (form) {
+          const result = await AppDataSource.getRepository(Answer)
+            .createQueryBuilder("answer")
+            .insert()
+            .values({ ...createAnswerDto, user_id: connectedUser.id })
+            .execute();
 
-        return result;
+          return result;
+        } else {
+          this.activityLogService.log({
+            userId: connectedUser.id,
+            action: "answer.created",
+            status: ACTIVITY_FAIL,
+            details: `Form is not open`,
+          });
+          return {
+            success: false,
+            message: `Form is not open`,
+          };
+        }
       } else {
         this.activityLogService.log({
           userId: connectedUser.id,
-          action: "form.created",
+          action: "answer.created",
           status: ACTIVITY_FAIL,
           details: `Question was already answered`,
         });
@@ -46,7 +70,7 @@ export class AnswerService {
     } catch (e) {
       this.activityLogService.log({
         userId: connectedUser.id,
-        action: "form.created",
+        action: "answer.created",
         status: ACTIVITY_FAIL,
         details: e.detail,
       });

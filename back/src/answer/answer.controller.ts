@@ -35,7 +35,7 @@ export class AnswerController {
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,
-        action: "answer .created",
+        action: "answer.created",
         status: ACTIVITY_SUCCESS,
       });
     }
