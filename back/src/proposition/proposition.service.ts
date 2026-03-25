@@ -1,0 +1,107 @@
+import { Injectable } from "@nestjs/common";
+import { CreatePropositionDto } from "./dto/create-proposition.dto";
+import { UpdatePropositionDto } from "./dto/update-proposition.dto";
+import { AppDataSource } from "DataSource";
+import { Proposition } from "typeorm/entities/Proposition";
+import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { User } from "better-auth";
+import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
+
+@Injectable()
+export class PropositionService {
+  constructor(private readonly activityLogService: ActivityLogService) {}
+
+  async create(
+    createPropositionDto: CreatePropositionDto,
+    connectedUser: User,
+  ) {
+    try {
+      const existingProposition = await AppDataSource.getRepository(Proposition)
+        .createQueryBuilder("proposition")
+        .where(
+          "proposition.content = :name AND proposition.question_id = :question",
+          {
+            name: createPropositionDto.content,
+            question: createPropositionDto.question_id,
+          },
+        )
+        .getOne();
+      if (!existingProposition) {
+        const result = await AppDataSource.getRepository(Proposition)
+          .createQueryBuilder("question")
+          .insert()
+          .values(createPropositionDto)
+          .execute();
+
+        return result;
+      } else {
+        this.activityLogService.log({
+          userId: connectedUser.id,
+          action: "proposition.created",
+          status: ACTIVITY_FAIL,
+          details: `Proposition "${createPropositionDto.content}" already exists on for this question`,
+        });
+        return {
+          success: false,
+          message: `Proposition "${createPropositionDto.content}" already exists on for this question`,
+        };
+      }
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "proposition.created",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
+  }
+
+  async findOne(id: number) {
+    return await AppDataSource.getRepository(Proposition)
+      .createQueryBuilder("proposition")
+      .where("proposition.id = :id", { id })
+      .getOne();
+  }
+
+  async update(
+    id: number,
+    updatePropositionDto: UpdatePropositionDto,
+    connectedUser: User,
+  ) {
+    try {
+      return await AppDataSource.getRepository(Proposition)
+        .createQueryBuilder("proposition")
+        .update()
+        .set(updatePropositionDto)
+        .where("proposition.id = :id", { id })
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "proposition.updated",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
+  }
+
+  async remove(id: number, connectedUser: User) {
+    try {
+      return await AppDataSource.getRepository(Proposition)
+        .createQueryBuilder("question")
+        .delete()
+        .where("question.id = :id", { id })
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "proposition.deleted",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
+  }
+}

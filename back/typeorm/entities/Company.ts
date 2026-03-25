@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { Color } from "./Color";
 import { Team } from "./Team";
+import { Form } from "./Form";
 
 @Entity("company")
 export class Company {
@@ -45,4 +46,12 @@ export class Company {
   )
   @JoinColumn({ name: "company_id" })
   teams?: Team[];
+
+  @OneToMany(
+    () => Form,
+    (form) => form.company,
+    { nullable: true },
+  )
+  @JoinColumn({ name: "company_id" })
+  forms?: Form[];
 }

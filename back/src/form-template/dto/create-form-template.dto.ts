@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class CreateTeamDto {
+export class CreateFormTemplateDto {
   @ApiProperty()
   name: string;
   @ApiProperty()
-  company_id: number;
+  questions_ids: number[];
 }

@@ -7,10 +7,12 @@ import {
   BeforeInsert,
   UpdateDateColumn,
   CreateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { Role } from "./Role";
 import { Team } from "./Team";
 import { AppDataSource } from "../../DataSource";
+import { Answer } from "./Answer";
 
 @Entity("user")
 export class User {
@@ -62,6 +64,14 @@ export class User {
   @ManyToOne(() => Team, { nullable: true })
   @JoinColumn({ name: "team_id" })
   team?: Team;
+
+  @OneToMany(
+    () => Answer,
+    (answer) => answer.form,
+    { nullable: true },
+  )
+  @JoinColumn({ name: "user_id" })
+  answers?: Answer[];
 
   async getRole(): Promise<Role | null> {
     const user = await AppDataSource.getRepository(User).findOne({
