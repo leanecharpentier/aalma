@@ -38,3 +38,4 @@ export const CEO_ROLE_ID = 3;
 export const HR_ROLE_ID = 4;
 export const MANAGER_ROLE_ID = 5;
 export const EMPLOYEE_ROLE_ID = 6;
+export const HEALTH_REFEREE_ROLE_ID = 6;
