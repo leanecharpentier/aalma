@@ -1,4 +1,9 @@
-import { tv, type VariantProps } from "tailwind-variants";
+"use client";
+
+import { LoaderCircle } from "lucide-react";
+import type { PropsWithChildren } from "react";
+import { Button as AriaButton } from "react-aria-components";
+import { tv } from "tailwind-variants";
 
 const button = tv({
   base: "cursor-pointer inline-flex items-center justify-center gap-2 font-semibold transition-colors duration-200",
@@ -19,36 +24,79 @@ const button = tv({
       full: "rounded-full",
       normal: "rounded-xl",
     },
+    disabled: {
+      true: "cursor-not-allowed opacity-50",
+      false: "",
+    },
+    loading: {
+      true: "cursor-not-allowed opacity-50",
+      false: "",
+    },
   },
   defaultVariants: {
     color: "primary",
     size: "md",
     rounded: "full",
+    disabled: false,
+    loading: false,
   },
 });
 
-type ButtonVariants = VariantProps<typeof button>;
-
-interface ButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
-    ButtonVariants {
-  children: React.ReactNode;
-  rightIcon?: React.ReactNode;
-}
+type ButtonProps = {
+  color?: keyof typeof button.variants.color;
+  size?: keyof typeof button.variants.size;
+  rounded?: keyof typeof button.variants.rounded;
+  disabled?: boolean;
+  loading?: boolean;
+  loadingText?: string;
+  left?: React.ReactNode;
+  right?: React.ReactNode;
+  className?: string;
+  type?: "button" | "submit" | "reset";
+  onPress?: () => void;
+} & PropsWithChildren;
 
 export function Button({
   children,
   color,
   size,
   rounded,
-  rightIcon,
+  disabled,
+  loading,
+  loadingText,
+  left,
+  right,
   className,
-  ...props
+  type,
+  onPress,
 }: ButtonProps) {
   return (
-    <button className={button({ color, size, rounded, className })} {...props}>
-      {children}
-      {rightIcon && <span>{rightIcon}</span>}
-    </button>
+    <AriaButton
+      onPress={onPress}
+      className={button({
+        color,
+        size,
+        rounded,
+        disabled,
+        loading,
+        className,
+      })}
+      isDisabled={disabled || loading}
+      type={type}
+    >
+      {left}
+      <span className="text-current">
+        {loading ? (
+          loadingText ? (
+            loadingText
+          ) : (
+            <LoaderCircle className="animate-spin" size={16} />
+          )
+        ) : (
+          children
+        )}
+      </span>
+      {right}
+    </AriaButton>
   );
 }

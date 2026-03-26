@@ -1,14 +1,16 @@
 "use client";
 
 import { Button } from "../ui/Button";
-import { SelectField, TextAreaField, TextField } from "../ui/TextField";
+import { Select } from "../ui/Select";
+import { TextArea } from "../ui/TextArea";
+import { TextField } from "../ui/TextField";
 
 const companySizes = [
-  { value: "0-10", label: "0-10" },
-  { value: "11-50", label: "11-50" },
-  { value: "51-200", label: "51-200" },
-  { value: "201-500", label: "201-500" },
-  { value: "500+", label: "500+" },
+  { id: "0-10", label: "0-10" },
+  { id: "11-50", label: "11-50" },
+  { id: "51-200", label: "51-200" },
+  { id: "201-500", label: "201-500" },
+  { id: "500+", label: "500+" },
 ];
 
 const logos = ["L'OREAL", "Allianz", "orange", "SNCF", "MAIF"];
@@ -32,29 +34,30 @@ export function ContactForm() {
             className="flex flex-col gap-6"
             onSubmit={(e) => e.preventDefault()}
           >
-            <TextField label="Nom" required placeholder="Dupont" />
-            <TextField label="Prenom" required placeholder="Dupont" />
+            <TextField label="Nom" isRequired placeholder="Dupont" />
+            <TextField label="Prenom" isRequired placeholder="Dupont" />
             <TextField
               label="Email professionnel"
-              required
+              isRequired
               type="email"
               placeholder="nomdupont@gmail.com"
             />
             <TextField
               label="Numero telephone"
-              required
+              isRequired
               type="tel"
               placeholder="+33"
             />
-            <TextField label="Entreprise" required />
-            <SelectField
+            <TextField label="Entreprise" isRequired />
+            <Select
               label="Taille de l'entreprise"
-              required
+              isRequired
               options={companySizes}
+              placeholder="0-10"
             />
-            <TextAreaField
+            <TextArea
               label="Message"
-              required
+              isRequired
               placeholder="Votre message"
             />
             <div className="mt-2">

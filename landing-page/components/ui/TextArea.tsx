@@ -3,35 +3,28 @@
 import {
   TextField as AriaTextField,
   type TextFieldProps as AriaTextFieldProps,
+  TextArea as AriaTextArea,
   type ValidationResult,
 } from "react-aria-components";
-import { tv } from "tailwind-variants";
-import { composeTailwindRenderProps, focusRing } from "../utils";
-import { Description, FieldError, fieldBorderStyles, Input, Label } from "./Field";
+import { composeTailwindRenderProps } from "../utils";
+import { Description, FieldError, Label } from "./Field";
 
-const inputStyles = tv({
-  extend: focusRing,
-  base: "border-b border-0 rounded-none min-h-9 font-sans text-sm py-0 px-0 box-border transition bg-transparent",
-  variants: {
-    isFocused: fieldBorderStyles.variants.isFocusWithin,
-    isInvalid: fieldBorderStyles.variants.isInvalid,
-    isDisabled: fieldBorderStyles.variants.isDisabled,
-  },
-});
-
-export interface TextFieldProps extends AriaTextFieldProps {
+export interface TextAreaProps extends AriaTextFieldProps {
   label?: string;
   description?: string;
   placeholder?: string;
   errorMessage?: string | ((validation: ValidationResult) => string);
+  rows?: number;
 }
 
-export function TextField({
+export function TextArea({
   label,
   description,
   errorMessage,
+  placeholder,
+  rows = 3,
   ...props
-}: TextFieldProps) {
+}: TextAreaProps) {
   return (
     <AriaTextField
       {...props}
@@ -41,7 +34,11 @@ export function TextField({
       )}
     >
       {label && <Label>{label}</Label>}
-      <Input className={inputStyles} />
+      <AriaTextArea
+        placeholder={placeholder}
+        rows={rows}
+        className="px-0 py-2.5 min-w-0 border-b border-gray-200 border-x-0 border-t-0 bg-transparent font-sans text-sm text-foreground placeholder:text-primary-300 outline-none transition-colors focus:border-primary-500 resize-none"
+      />
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>
     </AriaTextField>

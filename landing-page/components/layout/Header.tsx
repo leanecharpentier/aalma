@@ -29,14 +29,13 @@ export function Header() {
         </a>
 
         <div className="flex items-center gap-3">
-          <Button color="outline" size="sm">
-            <User size={16} />
+          <Button color="outline" size="sm" left={<User size={16} />}>
             Connexion
           </Button>
           <Button
             color="primary"
             size="sm"
-            rightIcon={<ArrowRight size={16} />}
+            right={<ArrowRight size={16} />}
           >
             Demander une demo
           </Button>
