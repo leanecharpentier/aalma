@@ -7,6 +7,7 @@ RUN npm ci
 
 COPY back/ .
 RUN npm run build
+RUN find dist/ -name "*.js" | head -20
 RUN ls -la dist/  # ← ajoute cette ligne pour voir ce qui est généré
 
 FROM node:20-alpine
