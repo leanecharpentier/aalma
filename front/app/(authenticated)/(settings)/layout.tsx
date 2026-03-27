@@ -6,9 +6,11 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-row">
+    <div className="flex h-full w-full">
       <SettingsSidebar />
-      <main className="flex flex-col grow overflow-y-auto p-6">{children}</main>
+      <section className="flex flex-col grow overflow-y-auto p-6">
+        {children}
+      </section>
     </div>
   );
 }

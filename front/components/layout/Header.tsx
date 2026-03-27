@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="flex flex-row items-center justify-between bg-white p-6 border border-gray-100 rounded-xl">
+    <header className="flex flex-row items-center justify-between bg-white p-6 border-b border-gray-50">
       <img src="/aalma.svg" alt="Aalma Logo" />
       <div className="flex flex-row gap-4">
         <Link

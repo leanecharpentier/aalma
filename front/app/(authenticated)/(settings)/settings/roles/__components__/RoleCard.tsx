@@ -22,11 +22,11 @@ export default function RoleCard({
   onEdit,
 }: RoleCardProps) {
   return (
-    <div className="flex flex-col justify-between gap-4 bg-white border border-gray-100 rounded-2xl p-5">
+    <div className="flex flex-col justify-between gap-4 bg-white rounded-2xl p-5 shadow-card">
       {/* Header de la card */}
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2.5">
-          <span className={`h-4 w-4 rounded shrink-0 ${color}`} />
+          <span className={`h-6 w-6 rounded shrink-0 ${color}`} />
           <span className="text-sm font-semibold text-gray-900">{name}</span>
         </div>
         <Button
