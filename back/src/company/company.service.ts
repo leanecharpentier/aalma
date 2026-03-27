@@ -72,7 +72,7 @@ export class CompanyService {
    * @param {number} id Company id
    * @returns Promise<Company | null>
    */
-  async findOne(id: number): Promise<Company | null> {
+  async findOne(id: string): Promise<Company | null> {
     return await AppDataSource.getRepository(Company)
       .createQueryBuilder("company")
       .where("company.id = :id", { id: id })
@@ -86,7 +86,7 @@ export class CompanyService {
    * @returns Promise<UpdateResult>
    */
   async update(
-    id: number,
+    id: string,
     updateCompanyDto: UpdateCompanyDto,
     connectedUser: User,
   ): Promise<UpdateResult | { success: boolean; message: string }> {
@@ -114,7 +114,7 @@ export class CompanyService {
    * @returns Promise<DeleteResult>
    */
   async remove(
-    id: number,
+    id: string,
     connectedUser: User,
   ): Promise<DeleteResult | { success: boolean; message: string }> {
     try {

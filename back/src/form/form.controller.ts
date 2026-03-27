@@ -66,21 +66,21 @@ export class FormController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async findOne(@Query() query, @Param("id") id: string) {
-    return await this.formService.findOne(+id, query?.answers);
+    return await this.formService.findOne(id, query?.answers);
   }
 
   @Get(":id/answered")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async answeredForm(@Param("id") id: string) {
-    return await this.formService.answeredForm(+id);
+    return await this.formService.answeredForm(id);
   }
 
   @Get(":id/call-again")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async callEmployeesAgain(@Param("id") id: string) {
-    return await this.formService.callEmployeesAgain(+id);
+    return await this.formService.callEmployeesAgain(id);
   }
 
   @Patch(":id")
@@ -93,7 +93,7 @@ export class FormController {
   ) {
     const connectedUser = (req as any).user;
     const result = await this.formService.update(
-      +id,
+      id,
       updateFormDto,
       connectedUser,
     );
@@ -112,7 +112,7 @@ export class FormController {
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
-    const result = await this.formService.remove(+id, connectedUser);
+    const result = await this.formService.remove(id, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,

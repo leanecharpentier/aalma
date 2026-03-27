@@ -11,14 +11,14 @@ import { Question } from "./Question";
 
 @Entity("proposition")
 export class Proposition {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   content: string;
 
   @Column()
-  question_id: number;
+  question_id: string;
 
   @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;

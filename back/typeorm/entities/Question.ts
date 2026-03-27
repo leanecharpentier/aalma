@@ -16,14 +16,14 @@ import { Answer } from "./Answer";
 
 @Entity("question")
 export class Question {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   label: string;
 
   @Column()
-  type_id: number;
+  type_id: string;
 
   @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;

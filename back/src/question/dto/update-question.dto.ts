@@ -7,7 +7,7 @@ export class UpdateQuestionDto extends PartialType(CreateQuestionDto) {
   @ApiPropertyOptional()
   label?: string;
   @ApiPropertyOptional()
-  type_id?: number;
+  type_id?: string;
   @ApiPropertyOptional()
   propositions?: Proposition[];
 }

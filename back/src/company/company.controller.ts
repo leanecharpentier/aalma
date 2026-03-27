@@ -56,7 +56,7 @@ export class CompanyController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID])
   findOne(@Param("id") id: string) {
-    return this.companyService.findOne(+id);
+    return this.companyService.findOne(id);
   }
 
   @Patch(":id")
@@ -69,7 +69,7 @@ export class CompanyController {
   ) {
     const connectedUser = (req as any).user;
     const result = await this.companyService.update(
-      +id,
+      id,
       updateCompanyDto,
       connectedUser,
     );
@@ -88,7 +88,7 @@ export class CompanyController {
   @Roles([SUPER_ADMIN_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
-    const result = await this.companyService.remove(+id, connectedUser);
+    const result = await this.companyService.remove(id, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,

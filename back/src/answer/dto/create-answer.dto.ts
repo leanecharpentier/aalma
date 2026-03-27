@@ -5,8 +5,8 @@ export class CreateAnswerDto {
   content: string;
 
   @ApiProperty()
-  form_id: number;
+  form_id: string;
 
   @ApiProperty()
-  question_id: number;
+  question_id: string;
 }

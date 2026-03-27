@@ -14,17 +14,17 @@ import { Answer } from "./Answer";
 
 @Entity("form")
 export class Form {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   name: string;
 
   @Column()
-  company_id: number;
+  company_id: string;
 
   @Column()
-  template_id: number;
+  template_id: string;
 
   @Column()
   startDate!: Date;

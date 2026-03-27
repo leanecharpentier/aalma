@@ -11,8 +11,8 @@ export class CreateFormDto {
   endDate: Date;
 
   @ApiProperty()
-  template_id: number;
+  template_id: string;
 
   @ApiPropertyOptional()
-  company_id?: number;
+  company_id?: string;
 }

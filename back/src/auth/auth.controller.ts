@@ -28,7 +28,7 @@ export class AuthController {
   }
 
   @Post("signup")
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async signUp(@Req() req, @Res() res) {
     const { name, email, password } = req.body;
     const result = await this.authService.signUp(req, name, email, password);
@@ -54,7 +54,7 @@ export class AuthController {
   @Get("signin/:provider")
   async oauthSignIn(
     @Param("provider") provider: string,
-    @Query("companyId") companyId: number,
+    @Query("companyId") companyId: string,
     @Req() req,
     @Res() res,
   ) {
@@ -79,7 +79,7 @@ export class AuthController {
     @Res() res,
   ) {
     try {
-      const companyId = parseInt(req.cookies["pending_company_id"] ?? "0");
+      const companyId = req.cookies["pending_company_id"] ?? "";
       res.clearCookie("pending_company_id");
       const result = await this.authService.callback(
         provider,

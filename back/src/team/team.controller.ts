@@ -65,14 +65,14 @@ export class TeamController {
     MANAGER_ROLE_ID,
   ])
   findOne(@Param("id") id: string) {
-    return this.teamService.findOne(+id);
+    return this.teamService.findOne(id);
   }
 
   @Get(":id/employees")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   findEmployees(@Param("id") id: string) {
-    return this.teamService.findEmployees(+id);
+    return this.teamService.findEmployees(id);
   }
 
   @Patch(":id")
@@ -85,7 +85,7 @@ export class TeamController {
   ) {
     const connectedUser = (req as any).user;
     const result = await this.teamService.update(
-      +id,
+      id,
       updateTeamDto,
       connectedUser,
     );
@@ -104,7 +104,7 @@ export class TeamController {
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
-    const result = await this.teamService.remove(+id, connectedUser);
+    const result = await this.teamService.remove(id, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,
