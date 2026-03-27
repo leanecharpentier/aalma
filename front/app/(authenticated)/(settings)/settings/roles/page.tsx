@@ -1,42 +1,24 @@
 import { Download, Plus } from "lucide-react";
-import Header from "@/components/layout/Header";
 import Button from "@/components/ui/Button";
+import { fetchRoles } from "@/features/roles/actions/fetch-roles";
 import ActivityHistory from "./__components__/ActivityHistory";
 import RoleCard from "./__components__/RoleCard";
 
-const ROLES = [
-  {
-    id: "rh",
-    name: "Ressources Humaines",
-    color: "bg-violet-400",
-    userCount: 3,
-  },
-  {
-    id: "manager",
-    name: "Manager",
-    color: "bg-blue-400",
-    userCount: 12,
-    teamCount: 4,
-  },
-  {
-    id: "referent",
-    name: "Référent Santé",
-    color: "bg-emerald-400",
-    userCount: 2,
-  },
-  {
-    id: "collaborateur",
-    name: "Collaborateur",
-    color: "bg-primary-400",
-    userCount: 87,
-  },
-];
+const ROLE_COLORS: Record<number, string> = {
+  2: "bg-rose-400",
+  3: "bg-amber-400",
+  4: "bg-violet-400",
+  5: "bg-blue-400",
+  6: "bg-emerald-400",
+};
 
-export default function RolesPage() {
+const DEFAULT_COLOR = "bg-primary-400";
+
+export default async function RolesPage() {
+  const roles = await fetchRoles();
+
   return (
     <div className="flex flex-col gap-6">
-      <Header />
-
       {/* Titre + actions */}
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-col gap-1">
@@ -60,13 +42,12 @@ export default function RolesPage() {
 
       {/* Cards des rôles */}
       <div className="grid grid-cols-4 gap-4">
-        {ROLES.map((role) => (
+        {roles.map((role) => (
           <RoleCard
             key={role.id}
             name={role.name}
-            color={role.color}
+            color={ROLE_COLORS[role.id] ?? DEFAULT_COLOR}
             userCount={role.userCount}
-            teamCount={role.teamCount}
           />
         ))}
       </div>

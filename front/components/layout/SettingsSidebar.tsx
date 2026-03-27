@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, LayoutDashboard, Settings, Users } from "lucide-react";
+import { LayoutDashboard, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { tv } from "tailwind-variants";
@@ -25,15 +25,11 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { label: "Accueil", href: "/home", icon: LayoutDashboard },
-  { label: "Questionnaires", href: "/questionnaire", icon: Users },
-  { label: "Analyse", href: "/analysis", icon: Building2 },
-  { label: "Plan d'action", href: "/action-plan", icon: Settings },
-  { label: "Librairie d'action", href: "/library", icon: Settings },
-  { label: "Impact", href: "/impact", icon: Settings },
+  { label: "Profil", href: "/settings/profil", icon: LayoutDashboard },
+  { label: "Gestion des rôles", href: "/settings/roles", icon: Users },
 ];
 
-export default function Sidebar() {
+export default function SettingsSidebar() {
   const pathname = usePathname();
 
   return (
