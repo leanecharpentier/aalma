@@ -7,6 +7,7 @@ export class RoleService {
   async findAll() {
     return await AppDataSource.getRepository(Role)
       .createQueryBuilder("role")
+      .loadRelationCountAndMap("role.userCount", "role.users")
       .getMany();
   }
 

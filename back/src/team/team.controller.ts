@@ -1,21 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
   Req,
+  UseGuards,
 } from "@nestjs/common";
-import { TeamService } from "./team.service";
-import { CreateTeamDto } from "./dto/create-team.dto";
-import { UpdateTeamDto } from "./dto/update-team.dto";
-import { AuthGuard } from "src/auth/auth.guard";
-import { RolesGuard } from "src/role/roles.guards";
-import { Roles } from "src/role/role.decorator";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { AuthGuard } from "src/auth/auth.guard";
+import { Roles } from "src/role/role.decorator";
+import { RolesGuard } from "src/role/roles.guards";
 import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
 import {
   ADMIN_ROLE_ID,
@@ -24,6 +22,10 @@ import {
   MANAGER_ROLE_ID,
   SUPER_ADMIN_ROLE_ID,
 } from "typeorm/entities/Role";
+import { CreateTeamDto } from "./dto/create-team.dto";
+import { GetTeamsDto } from "./dto/get-teams.dto";
+import { UpdateTeamDto } from "./dto/update-team.dto";
+import { TeamService } from "./team.service";
 
 @Controller("team")
 export class TeamController {
@@ -51,8 +53,8 @@ export class TeamController {
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
-  findAll() {
-    return this.teamService.findAll();
+  findAll(@Query() getTeamsDto: GetTeamsDto) {
+    return this.teamService.findAll(getTeamsDto);
   }
 
   @Get(":id")

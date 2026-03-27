@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { CreateTeamDto } from "./dto/create-team.dto";
-import { UpdateTeamDto } from "./dto/update-team.dto";
 import { AppDataSource } from "DataSource";
-import { Team } from "typeorm/entities/Team";
-import { InsertResult } from "typeorm";
-import { UpdateResult } from "typeorm/browser";
-import { DeleteResult } from "typeorm/browser";
-import { User } from "typeorm/entities/User";
+import { Injectable } from "@nestjs/common";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { InsertResult } from "typeorm";
+import { DeleteResult, UpdateResult } from "typeorm/browser";
 import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
+import { Team } from "typeorm/entities/Team";
+import { User } from "typeorm/entities/User";
+import { CreateTeamDto } from "./dto/create-team.dto";
+import { GetTeamsDto } from "./dto/get-teams.dto";
+import { UpdateTeamDto } from "./dto/update-team.dto";
 
 @Injectable()
 export class TeamService {
@@ -64,10 +64,13 @@ export class TeamService {
    * Get all teams in the database.
    * @returns Promise<Team[]>
    */
-  async findAll(): Promise<Team[]> {
-    return await AppDataSource.getRepository(Team)
-      .createQueryBuilder("team")
-      .getMany();
+  async findAll(getTeamsDto?: GetTeamsDto): Promise<Team[]> {
+    const { company_id } = getTeamsDto ?? {};
+    const qb = AppDataSource.getRepository(Team).createQueryBuilder("team");
+    if (company_id) {
+      qb.where("team.company_id = :company_id", { company_id });
+    }
+    return qb.getMany();
   }
 
   /**
