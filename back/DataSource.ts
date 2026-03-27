@@ -11,8 +11,7 @@ export const AppDataSource = new DataSource({
   // password: process.env.DATABASE_PASSWORD,
   // database: process.env.DATABASE_NAME,
   url: process.env.DATABASE_URL,
-  entities: [path.join(__dirname, "typeorm/entities/**/*.{ts,js}")],
-  migrations: [path.join(__dirname, "typeorm/migrations/**/*.ts")],
-  synchronize: true,
-  logging: false,
+  synchronize: false,
+  entities: [path.resolve(__dirname, "typeorm/entities/**/*.{ts,js}")],
+  migrations: [path.resolve(__dirname, "typeorm/migrations/**/*.ts")],
 });
