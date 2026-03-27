@@ -39,7 +39,7 @@ export default function Login() {
         email: email.trim(),
         password,
       });
-      router.push("/dashboard");
+      router.push("/home");
       router.refresh();
     } catch (caughtError) {
       if (caughtError instanceof ApiError) {
