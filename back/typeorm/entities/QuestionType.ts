@@ -11,8 +11,8 @@ import { Question } from "./Question";
 
 @Entity("question_type")
 export class QuestionType {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   label: string;

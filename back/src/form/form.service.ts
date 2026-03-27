@@ -88,7 +88,7 @@ export class FormService {
       .getMany();
   }
 
-  async answeredForm(id: number) {
+  async answeredForm(id: string) {
     const form = await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
       .leftJoinAndSelect("form.answers", "answers")
@@ -115,7 +115,7 @@ export class FormService {
       .getMany();
   }
 
-  async callEmployeesAgain(id: number) {
+  async callEmployeesAgain(id: string) {
     const form = await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
       .leftJoinAndSelect("form.answers", "answers")
@@ -154,7 +154,7 @@ export class FormService {
     return { success: true, message: "Notifications sent" };
   }
 
-  async findOne(id: number, answer?: boolean) {
+  async findOne(id: string, answer?: boolean) {
     const query = await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
       .leftJoinAndSelect("form.template", "form_template")
@@ -170,7 +170,7 @@ export class FormService {
     return result;
   }
 
-  async update(id: number, updateFormDto: UpdateFormDto, connectedUser: User) {
+  async update(id: string, updateFormDto: UpdateFormDto, connectedUser: User) {
     try {
       if (updateFormDto.name) {
         await AppDataSource.getRepository(Form)
@@ -192,7 +192,7 @@ export class FormService {
     }
   }
 
-  async remove(id: number, connectedUser: User) {
+  async remove(id: string, connectedUser: User) {
     try {
       return await AppDataSource.getRepository(Form)
         .createQueryBuilder("form")

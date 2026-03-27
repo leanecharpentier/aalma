@@ -10,14 +10,14 @@ export class RoleService {
       .getMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return await AppDataSource.getRepository(Role)
       .createQueryBuilder("role")
       .where("role.id = :id", { id })
       .getOne();
   }
 
-  async findEmployees(id: number) {
+  async findEmployees(id: string) {
     return await AppDataSource.getRepository(Role)
       .createQueryBuilder("role")
       .leftJoinAndSelect("role.users", "user")

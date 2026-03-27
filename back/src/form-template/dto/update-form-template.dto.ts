@@ -3,9 +3,9 @@ import { CreateFormTemplateDto } from "./create-form-template.dto";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 
 export class UpdateFormTemplateDto extends PartialType(CreateFormTemplateDto) {
-  id: number;
+  id: string;
   @ApiPropertyOptional()
   name?: string;
   @ApiPropertyOptional()
-  questions_ids?: number[];
+  questions_ids?: string[];
 }

@@ -9,12 +9,11 @@ import {
 } from "typeorm";
 import { Form } from "./Form";
 import { FormTemplateQuestion } from "./FormTemplateQuestion";
-import { Question } from "./Question";
 
 @Entity("form_template")
 export class FormTemplate {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   name: string;

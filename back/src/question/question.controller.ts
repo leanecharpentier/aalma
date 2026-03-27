@@ -60,7 +60,7 @@ export class QuestionController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   findOne(@Param("id") id: string) {
-    return this.questionService.findOne(+id);
+    return this.questionService.findOne(id);
   }
 
   @Patch(":id")
@@ -73,7 +73,7 @@ export class QuestionController {
   ) {
     const connectedUser = (req as any).user;
     const result = await this.questionService.update(
-      +id,
+      id,
       updateQuestionDto,
       connectedUser,
     );
@@ -92,7 +92,7 @@ export class QuestionController {
   @Roles([SUPER_ADMIN_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
-    const result = await this.questionService.remove(+id, connectedUser);
+    const result = await this.questionService.remove(id, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,

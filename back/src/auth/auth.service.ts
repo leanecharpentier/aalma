@@ -67,7 +67,7 @@ export class AuthService {
     return auth.api.getSession({ headers: request.headers });
   }
 
-  async signInSocial(companyId: number, provider: string) {
+  async signInSocial(companyId: string, provider: string) {
     const company = await this.companyService.findOne(companyId);
 
     if (!company) throw new NotFoundException("Organisation introuvable");
@@ -92,7 +92,7 @@ export class AuthService {
     });
   }
 
-  async callback(provider: string, companyId: number, @Req() req, @Res() res) {
+  async callback(provider: string, companyId: string, @Req() req, @Res() res) {
     const protocol = req.protocol || "http";
     const host = req.headers.host;
     const fullUrl = `${protocol}://${host}${req.url}`;

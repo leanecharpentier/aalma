@@ -4,5 +4,5 @@ export class CreatePropositionDto {
   @ApiProperty()
   content: string;
   @ApiProperty()
-  question_id: number;
+  question_id: string;
 }

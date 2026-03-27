@@ -1,24 +1,37 @@
-import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn, BeforeInsert, OneToMany } from 'typeorm';
-import { Company } from './Company';
+import {
+  Column,
+  Entity,
+  PrimaryColumn,
+  ManyToOne,
+  JoinColumn,
+  BeforeInsert,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Company } from "./Company";
 
-@Entity('color')
+@Entity("color")
 export class Color {
-  @PrimaryColumn('integer')
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
-  name: string; 
+  name: string;
 
   @Column()
-  hexacode: string; 
+  hexacode: string;
 
-  @Column('date', { name: 'createdAt' })
+  @Column("date", { name: "createdAt" })
   createdAt!: Date;
 
-  @Column('date', { name: 'updatedAt' })
+  @Column("date", { name: "updatedAt" })
   updatedAt!: Date;
 
-  @OneToMany(() => Company, company => company.color, { nullable: true })
-  @JoinColumn({ name: 'color_id' })
+  @OneToMany(
+    () => Company,
+    (company) => company.color,
+    { nullable: true },
+  )
+  @JoinColumn({ name: "color_id" })
   companies?: Company[];
 }

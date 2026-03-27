@@ -108,7 +108,7 @@ export class UserService {
     connectedUser = await this.findOne(connectedUser.id);
     const companyId = await connectedUser?.getCompanyId();
     // Get info from front (format not determined yet)
-    const roleMapping: { [key: number]: string[] } = JSON.parse(
+    const roleMapping: { [key: string]: string[] } = JSON.parse(
       body.role_mapping,
     );
     const globalMapping: {
@@ -153,13 +153,12 @@ export class UserService {
       createUserDto.emailVerified = false;
 
       // Determine role_id based on the correspondingTable mapping
-      const roleId = Number(
+      const roleId =
         Object.entries(roleMapping).find(([, values]) =>
           values
             .map((v) => v.toLowerCase())
             .includes(user[globalMapping.role_column].toLowerCase()),
-        )?.[0] ?? 6,
-      );
+        )?.[0] ?? "";
       createUserDto.role_id = roleId;
 
       // Get team or create it if it doesn't exist

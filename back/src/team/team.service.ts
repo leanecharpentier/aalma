@@ -75,7 +75,7 @@ export class TeamService {
    * @param id number id of the team to get
    * @returns Promise<Team | null>
    */
-  async findOne(id: number): Promise<Team | null> {
+  async findOne(id: string): Promise<Team | null> {
     return await AppDataSource.getRepository(Team)
       .createQueryBuilder("team")
       .where("team.id = :id", { id })
@@ -87,7 +87,7 @@ export class TeamService {
    * @param id number id of the team to get employees of
    * @returns Promise<Team | null>
    */
-  async findEmployees(id: number): Promise<Team | null> {
+  async findEmployees(id: string): Promise<Team | null> {
     return await AppDataSource.getRepository(Team)
       .createQueryBuilder("team")
       .leftJoinAndSelect("team.users", "user")
@@ -102,7 +102,7 @@ export class TeamService {
    * @returns Promise<UpdateResult>
    */
   async update(
-    id: number,
+    id: string,
     updateTeamDto: UpdateTeamDto,
     connectedUser: User,
   ): Promise<UpdateResult | { success: boolean; message: string }> {
@@ -130,7 +130,7 @@ export class TeamService {
    * @returns Promise<DeleteResult>
    */
   async remove(
-    id: number,
+    id: string,
     connectedUser: User,
   ): Promise<DeleteResult | { success: boolean; message: string }> {
     try {

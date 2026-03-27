@@ -6,13 +6,14 @@ import {
   JoinColumn,
   BeforeInsert,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import { User } from "./User";
 
 @Entity("role")
 export class Role {
-  @PrimaryColumn("integer")
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   name: string;
@@ -32,10 +33,10 @@ export class Role {
   users?: User[];
 }
 
-export const SUPER_ADMIN_ROLE_ID = 1;
-export const ADMIN_ROLE_ID = 2;
-export const CEO_ROLE_ID = 3;
-export const HR_ROLE_ID = 4;
-export const MANAGER_ROLE_ID = 5;
-export const EMPLOYEE_ROLE_ID = 6;
-export const HEALTH_REFEREE_ROLE_ID = 6;
+export const SUPER_ADMIN_ROLE_ID = "Super Admin";
+export const ADMIN_ROLE_ID = "Admin";
+export const CEO_ROLE_ID = "CEO";
+export const HR_ROLE_ID = "HR";
+export const MANAGER_ROLE_ID = "Manager";
+export const EMPLOYEE_ROLE_ID = "Employee";
+export const HEALTH_REFEREE_ROLE_ID = "Health Referee";

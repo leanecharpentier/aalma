@@ -16,14 +16,14 @@ import { AppDataSource } from "../../DataSource";
 
 @Entity("team")
 export class Team {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   name: string;
 
   @Column("text", { name: "company_id" })
-  company_id: number;
+  company_id: string;
 
   @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;

@@ -4,5 +4,5 @@ export class CreateFormTemplateDto {
   @ApiProperty()
   name: string;
   @ApiProperty()
-  questions_ids: number[];
+  questions_ids: string[];
 }

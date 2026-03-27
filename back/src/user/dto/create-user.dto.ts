@@ -14,7 +14,7 @@ export class CreateUserDto {
   @ApiProperty()
   emailVerified: boolean;
   @ApiProperty()
-  role_id: number;
+  role_id: string;
   @ApiPropertyOptional()
-  team_id?: number;
+  team_id?: string;
 }

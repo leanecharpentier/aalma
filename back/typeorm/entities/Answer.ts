@@ -13,8 +13,8 @@ import { Question } from "./Question";
 
 @Entity("answer")
 export class Answer {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   content: string;
@@ -23,10 +23,10 @@ export class Answer {
   user_id: string;
 
   @Column()
-  form_id: number;
+  form_id: string;
 
   @Column()
-  question_id: number;
+  question_id: string;
 
   @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;

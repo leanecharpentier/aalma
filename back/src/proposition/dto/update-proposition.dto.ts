@@ -6,5 +6,5 @@ export class UpdatePropositionDto extends PartialType(CreatePropositionDto) {
   @ApiPropertyOptional()
   content?: string;
   @ApiPropertyOptional()
-  question_id?: number;
+  question_id?: string;
 }

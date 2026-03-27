@@ -78,7 +78,7 @@ export class AnswerService {
     }
   }
 
-  async remove(id: number, connectedUser: User) {
+  async remove(id: string, connectedUser: User) {
     try {
       return await AppDataSource.getRepository(Answer)
         .createQueryBuilder("answer")

@@ -47,7 +47,7 @@ export class AnswerController {
   @Roles([SUPER_ADMIN_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
-    const result = await this.answerService.remove(+id, connectedUser);
+    const result = await this.answerService.remove(id, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,

@@ -6,7 +6,7 @@ export class UpdateCompanyDto extends PartialType(CreateCompanyDto) {
   @ApiProperty()
   name: string;
   @ApiPropertyOptional()
-  color_id?: number;
+  color_id?: string;
   @ApiPropertyOptional()
   googleDomain?: string;
   @ApiPropertyOptional()
