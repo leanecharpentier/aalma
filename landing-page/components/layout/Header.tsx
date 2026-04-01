@@ -10,7 +10,7 @@ const navLinks = [
 
 export function Header() {
   return (
-    <header className="w-full py-4 px-6 lg:px-12">
+    <header className="sticky top-0 z-50 w-full py-4 px-6 lg:px-12 bg-primary-40/80 backdrop-blur-md shadow-card">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
@@ -32,11 +32,7 @@ export function Header() {
           <Button color="outline" size="sm" left={<User size={16} />}>
             Connexion
           </Button>
-          <Button
-            color="primary"
-            size="sm"
-            right={<ArrowRight size={16} />}
-          >
+          <Button color="primary" size="sm" right={<ArrowRight size={16} />}>
             Demander une demo
           </Button>
         </div>

@@ -11,7 +11,7 @@ const button = tv({
     color: {
       primary: "bg-primary-500 text-white hover:bg-primary-600",
       outline:
-        "bg-white text-foreground border border-gray-200 hover:bg-gray-50",
+        "bg-transparent text-ek-gray-800 border border-ek-gray-800 hover:bg-ek-gray-100",
       ghost: "bg-transparent text-foreground hover:bg-primary-100",
       white: "bg-white text-primary-500 hover:bg-gray-50",
     },
@@ -36,7 +36,7 @@ const button = tv({
   defaultVariants: {
     color: "primary",
     size: "md",
-    rounded: "full",
+    rounded: "normal",
     disabled: false,
     loading: false,
   },

@@ -4,14 +4,14 @@ const tags = ["IA", "Plan d'action", "Impact mesurable"];
 
 export function Hero() {
   return (
-    <section className="relative w-full overflow-hidden px-6 lg:px-12 py-16 lg:py-24">
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start gap-12">
-        <div className="flex-1 max-w-xl z-10">
+    <section className="relative w-full min-h-screen overflow-hidden px-6 lg:px-12 py-16 lg:py-24 flex items-center">
+      <div className="w-full flex flex-col lg:flex-row items-center gap-12">
+        <div className="w-full lg:w-1/2 z-10">
           <div className="flex items-center gap-2 mb-8">
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary-400 text-primary-500 text-xs font-medium"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-primary-100 bg-primary-50 text-primary-500 text-xs font-medium"
               >
                 {tag === "IA" && (
                   <span className="w-4 h-4 rounded-full bg-primary-500 flex items-center justify-center">
@@ -31,7 +31,7 @@ export function Hero() {
             </span>
           </h1>
 
-          <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-md">
+          <p className="text-gray-800 text-sm leading-relaxed mb-8">
             Aalma transforme le ressenti de vos equipes en indicateurs clairs
             pour mieux comprendre, agir et ameliorer durablement leur bien etre.
           </p>
@@ -51,19 +51,6 @@ export function Hero() {
           <div className="absolute top-8 left-12 w-48 h-64 rounded-3xl bg-gradient-to-br from-primary-300 to-primary-400 opacity-80" />
           <div className="absolute top-0 left-32 w-72 h-80 rounded-3xl bg-gradient-to-br from-primary-400 to-primary-500" />
           <div className="absolute top-16 left-48 w-56 h-72 rounded-3xl bg-primary-500 border-2 border-primary-300/50" />
-        </div>
-      </div>
-
-      {/* Chat widget */}
-      <div className="absolute bottom-8 right-8 bg-white rounded-2xl shadow-lg px-4 py-3 flex items-center gap-3 z-10">
-        <span className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center">
-          <span className="w-5 h-5 rounded-full border-2 border-primary-500" />
-        </span>
-        <div>
-          <p className="text-sm font-semibold text-foreground">
-            Discuter avec Aalma
-          </p>
-          <p className="text-xs text-gray-400">IA</p>
         </div>
       </div>
     </section>
