@@ -1,23 +1,24 @@
+import Link from "next/link";
 import { Button } from "../ui/Button";
 
 const steps = [
   {
     number: "01",
-    title: "Collectez les donnees",
+    title: "Collectez les données",
     description:
-      "Recueillez des retours anonymes et des signaux terrain pour mieux comprendre le ressenti reel de vos equipes",
+      "Recueillez des retours anonymes et des signaux terrain pour mieux comprendre le ressenti réel d evos équipes",
   },
   {
     number: "02",
-    title: "Analysez les donnees",
+    title: "Analysez les données",
     description:
-      "Transformez ces donnees en indicateurs clairs, comparables et exploitables",
+      "Transformez ces données e indicateurs clairs, comparables et exploitables",
   },
   {
     number: "03",
     title: "Agissez",
     description:
-      "Deployez des plans concrets et suivez leur impact dans le temps",
+      "Déployez des plans concrets et suivez leur impact dans le temps",
   },
 ];
 
@@ -33,37 +34,40 @@ export function HowItWorks() {
           {steps.map((step, i) => (
             <div
               key={step.number}
-              className={`flex flex-col md:flex-row items-center gap-8 ${
-                i % 2 === 1 ? "md:flex-row-reverse" : ""
-              }`}
+              className="flex flex-col md:flex-row items-center gap-8"
             >
-              <div className="flex-1">
-                <div className="relative mb-4">
-                  <span className="text-7xl lg:text-8xl font-bold text-primary-500/20">
+              <div className="flex-1 flex flex-col items-start gap-4">
+                <div className="relative">
+                  <span className="text-9xl font-bold text-primary-500">
                     {step.number}
                   </span>
-                  <div className="absolute left-0 top-4 w-1 h-16 bg-primary-500 rounded-full" />
+                  <div className="absolute -left-4 top-4 w-1 h-[85%] bg-gradient-to-b from-primary-200 to-primary-500 rounded-full" />
+                  <div className="absolute -left-2 top-2 w-15 h-15 rounded-full bg-white/30 backdrop-blur-xs border border-white/20" />
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-gray-500 text-sm leading-relaxed max-w-sm">
-                  {step.description}
-                </p>
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-xl font-bold text-foreground">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-900 text-sm leading-relaxed max-w-sm">
+                    {step.description}
+                  </p>
+                </div>
               </div>
 
               {/* Image placeholder */}
               <div className="flex-1 w-full">
-                <div className="w-full h-48 lg:h-56 rounded-2xl bg-gradient-to-br from-primary-400 to-primary-500 shadow-lg" />
+                <div className="w-full h-48 lg:h-56 rounded-2xl bg-linear-to-t from-primary-200 via-primary-500 to-primary-500 shadow-lg" />
               </div>
             </div>
           ))}
         </div>
 
         <div className="text-center mt-16">
-          <Button color="primary" size="lg">
-            Je suis interesse
-          </Button>
+          <Link href="/contact">
+            <Button color="primary" size="lg">
+              Je suis intéressé
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

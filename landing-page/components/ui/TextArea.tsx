@@ -33,11 +33,11 @@ export function TextArea({
         "flex flex-col gap-1 font-sans",
       )}
     >
-      {label && <Label>{label}</Label>}
+      {label && <Label>{label}{props.isRequired && <span className="text-black"> *</span>}</Label>}
       <AriaTextArea
         placeholder={placeholder}
         rows={rows}
-        className="px-0 py-2.5 min-w-0 border-b border-gray-200 border-x-0 border-t-0 bg-transparent font-sans text-sm text-foreground placeholder:text-primary-300 outline-none transition-colors focus:border-primary-500 resize-none"
+        className="px-3 py-2.5 min-w-0 border border-primary-300 rounded-lg bg-primary-50 font-sans text-sm text-foreground placeholder:text-primary-300 outline-none transition-colors focus:border-primary-500 resize-none"
       />
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>

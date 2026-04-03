@@ -7,9 +7,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Aalma - Pilotez la sante mentale au travail",
+  title: "Aalma - Pilotez la santé mentale au travail",
   description:
-    "Aalma transforme le ressenti de vos equipes en indicateurs clairs pour mieux comprendre, agir et ameliorer durablement leur bien etre.",
+    "Aalma transforme le ressenti de vos équipes en indicateurs clairs pour mieux comprendre, agir et améliorer durablement leur bien être.",
 };
 
 export default function RootLayout({

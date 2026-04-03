@@ -1,14 +1,16 @@
+import Image from "next/image";
+
 const footerLinks = [
   { label: "Plateforme", href: "#plateforme" },
   { label: "Fonctionnement", href: "#fonctionnement" },
-  { label: "Equipe", href: "#equipe" },
+  { label: "Équipe", href: "#equipe" },
   { label: "Contact", href: "#contact" },
 ];
 
 const legalLinks = [
-  "Politique de confidentialite",
+  "Politique de confidentialité",
   "Conditions d'utilisation",
-  "Parametres des cookies",
+  "Paramètres des cookies",
 ];
 
 export function Footer() {
@@ -41,12 +43,16 @@ export function Footer() {
 
         {/* Bottom */}
         <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
-          <div>
-            <p className="text-5xl lg:text-7xl font-bold text-foreground leading-none mb-2">
-              aalma
-            </p>
-            <p className="text-xs text-gray-400">
-              2026, Aalma, Tous droits reserves.
+          <div className="flex flex-col items-center">
+            <Image
+              src="/logo-orange.svg"
+              alt="Aalma"
+              width={250}
+              height={140}
+              className="h-36 lg:h-48 w-auto mb-2"
+            />
+            <p className="text-xs text-gray-900">
+              2026, Aalma, Tous droits réservés.
             </p>
           </div>
           <div className="flex flex-wrap gap-6">
@@ -54,7 +60,7 @@ export function Footer() {
               <a
                 key={link}
                 href="#"
-                className="text-xs text-gray-500 hover:text-foreground transition-colors"
+                className="text-xs text-gray-900 hover:text-foreground transition-colors"
               >
                 {link}
               </a>

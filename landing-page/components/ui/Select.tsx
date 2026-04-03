@@ -17,7 +17,7 @@ import { composeTailwindRenderProps } from "../utils";
 import { Description, FieldError } from "./Field";
 
 const selectButton = tv({
-  base: "flex items-center justify-between w-full border-b border-gray-200 bg-transparent py-2.5 px-0 text-sm text-foreground outline-none transition-colors cursor-pointer",
+  base: "flex items-center justify-between w-full border border-primary-300 rounded-lg bg-primary-50 py-2.5 px-3 text-sm text-foreground outline-none transition-colors cursor-pointer",
   variants: {
     isFocused: {
       true: "border-primary-500",
@@ -57,7 +57,7 @@ export function Select({
     >
       {label && (
         <Label className="font-sans text-sm text-foreground font-medium cursor-default w-fit">
-          {label}
+          {label}{props.isRequired && <span className="text-black"> *</span>}
         </Label>
       )}
       <Button className={selectButton}>

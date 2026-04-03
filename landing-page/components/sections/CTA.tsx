@@ -1,36 +1,36 @@
+import Link from "next/link";
 import { Button } from "../ui/Button";
 
 export function CTA() {
   return (
     <section className="w-full relative overflow-hidden">
-      <div className="bg-gradient-to-r from-primary-400 to-primary-500 px-6 lg:px-12 py-20">
-        {/* Decorative shapes */}
-        <div className="absolute left-0 top-0 w-96 h-96 opacity-20">
-          <div className="absolute top-12 left-8 w-24 h-24 rounded-2xl border border-white/40" />
-          <div className="absolute top-8 left-20 w-24 h-24 rounded-2xl border border-white/40" />
-          <div className="absolute top-24 left-16 w-24 h-24 rounded-2xl border border-white/40" />
-          <div className="absolute top-20 left-32 w-24 h-24 rounded-2xl border border-white/40" />
-          <div className="absolute top-36 left-8 w-24 h-24 rounded-2xl border border-white/40" />
-          <div className="absolute top-36 left-28 w-24 h-24 rounded-2xl border border-white/40" />
-          <div className="absolute top-48 left-20 w-24 h-24 rounded-2xl border border-white/40" />
-        </div>
+      <div className="bg-linear-to-b from-primary-300 via-primary-500 to-primary-500 px-6 lg:px-12 py-20">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+          {/* Decorative shapes */}
+          <div className="lg:w-1/2 grid grid-cols-3 gap-4 opacity-20">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <div
+                key={i}
+                className="w-40 h-40 rounded-full border border-white/70 shadow-[inset_0_4px_16px_rgba(180,80,0,0.5)]"
+              />
+            ))}
+          </div>
 
-        <div className="max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row items-center gap-12">
-          <div className="lg:w-1/2" />
           <div className="lg:w-1/2">
-            <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4 leading-tight">
-              Presentez-nous vos enjeux et decouvrez comment aalma peut vous
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
+              Présentez-nous vos enjeux et découvrez comment aalma peut vous
               aider
             </h2>
-            <p className="text-white/80 text-sm mb-8">
-              Echange sans engagement &middot; Demo personnalisee &middot;
-              Reponse sous 24h
+            <p className="text-white text-lg mb-8">
+              Échange sans engagement · Démo personnalisée · Réponse sous 24h
             </p>
-            <Button color="white" size="lg">
-              Demander une demo
-            </Button>
-            <p className="text-white/60 text-xs mt-4">
-              Deja + de 500 equipes nous font confiance
+            <Link href="/contact">
+              <Button color="white" size="lg">
+                Demander une démo
+              </Button>
+            </Link>
+            <p className="text-white/60 text-lg mt-4">
+              Déjà + de 500 équipes nous font confiance
             </p>
           </div>
         </div>

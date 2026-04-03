@@ -4,17 +4,17 @@ const features = [
   {
     title: "Plan d'action",
     description:
-      "Aalma vous permet de mieux comprendre le ressenti de vos equipes et de mettre en place des actions adaptees, utiles et mesurables dans le temps",
+      "Aalma vous permet de mieux comprendre le ressenti de vos équipes et de mettre en place des actions adaptées, utiles et mesurables dans le temps",
   },
   {
     title: "Collaboration",
     description:
-      "Aalma vous permet de mieux comprendre le ressenti de vos equipes et de mettre en place des actions adaptees, utiles et mesurables dans le temps",
+      "Collaboration : Aalma unit les forces de la direction et du terrain dans un projet commun : faire de la cohésion d'équipe le moteur d'une entreprise en meilleure santé",
   },
   {
     title: "IA & Recommandations",
     description:
-      "Aalma vous permet de mieux comprendre le ressenti de vos equipes et de mettre en place des actions adaptees, utiles et mesurables dans le temps",
+      "Aalma vous permet de mieux comprendre le ressenti de vos équipes et de mettre en place des actions adaptées, utiles et mesurables dans le temps",
   },
 ];
 
@@ -33,8 +33,8 @@ export function Features() {
           Comprenez, mesurez, agissez
         </h2>
         <p className="text-white/80 text-center text-sm max-w-lg mx-auto mb-12">
-          Aalma vous permet de mieux comprendre le ressenti de vos equipes et de
-          mettre en place des actions adaptees, utiles et mesurables dans le
+          Aalma vous permet de mieux comprendre le ressenti de vos équipes et de
+          mettre en place des actions adaptées, utiles et mesurables dans le
           temps
         </p>
 
