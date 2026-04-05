@@ -110,7 +110,7 @@ export default function AddActionWizard({ onClose }: AddActionWizardProps) {
 	const [selectedAction, setSelectedAction] = useState<string | null>(null);
 
 	return (
-		<div className="flex flex-1 flex-col bg-gray-40 rounded-xl shadow-card-light p-5 overflow-y-auto min-w-0 min-h-0 h-[674px]">
+		<div className="flex flex-1 flex-col bg-gray-40 rounded-xl shadow-card-light p-5 overflow-y-auto min-w-0 min-h-0 h-full">
 			{/* Back button */}
 			<button
 				type="button"
@@ -216,7 +216,7 @@ function ActionPickCard({
 			{/* Top: radio + favorite */}
 			<div className="flex items-center justify-between w-full">
 				<div
-					className={`size-[19px] rounded-full border-2 ${
+					className={`size-5 rounded-full border-2 ${
 						selected ? "border-primary-500 bg-primary-500" : "border-gray-500"
 					}`}
 				/>
@@ -258,7 +258,7 @@ function StepChooseAction({
 		<div className="flex flex-col gap-5 flex-1 min-h-0">
 			{/* Search + custom action */}
 			<div className="flex items-center justify-between">
-				<div className="flex items-center gap-1.5 bg-gray-40 border border-gray-100 rounded-lg p-3.5 w-[300px]">
+				<div className="flex items-center gap-1.5 bg-gray-40 border border-gray-100 rounded-lg p-3.5 w-75">
 					<span className="text-sm text-gray-300 flex-1">Search</span>
 					<Search size={20} className="text-gray-500" />
 				</div>
@@ -329,7 +329,7 @@ function StepPlanify({ onNext }: { onNext: () => void }) {
 					<span className="text-sm font-bold text-gray-900">
 						Date de l&apos;atelier
 					</span>
-					<div className="flex items-center gap-2 border border-gray-100 rounded-lg p-3.5 w-[300px]">
+					<div className="flex items-center gap-2 border border-gray-100 rounded-lg p-3.5 w-75">
 						<input
 							type="text"
 							placeholder="04/07/2025"
@@ -384,7 +384,7 @@ function StepParticipants({ onSave }: { onSave: () => void }) {
 	return (
 		<div className="flex flex-col gap-5 flex-1 min-h-0">
 			{/* Search */}
-			<div className="flex items-center gap-1.5 bg-gray-40 border border-gray-100 rounded-lg p-3.5 w-[300px]">
+			<div className="flex items-center gap-1.5 bg-gray-40 border border-gray-100 rounded-lg p-3.5 w-75">
 				<span className="text-sm text-gray-300 flex-1">Search</span>
 				<Search size={20} className="text-gray-500" />
 			</div>

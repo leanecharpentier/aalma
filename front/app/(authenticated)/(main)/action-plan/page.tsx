@@ -18,7 +18,7 @@ export default function ActionPlan() {
 			{/* Header */}
 			<div className="flex items-start justify-between">
 				<div className="flex flex-col gap-2">
-					<h1 className="text-[28px] font-bold text-gray-900">
+					<h1 className="text-3xl font-bold text-gray-900">
 						Plan d&apos;action
 					</h1>
 					<p className="text-lg text-gray-900">
@@ -34,7 +34,7 @@ export default function ActionPlan() {
 
 			{/* Priorities */}
 			<div className="flex flex-col gap-3 py-2">
-				<h2 className="text-[21px] font-bold text-gray-900">Priorités</h2>
+				<h2 className="text-xl font-bold text-gray-900">Priorités</h2>
 				<div className="flex gap-5 flex-wrap">
 					{PRIORITIES.map((priority) => (
 						<PriorityPill key={priority.index} {...priority} />

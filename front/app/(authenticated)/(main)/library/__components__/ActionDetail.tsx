@@ -82,7 +82,7 @@ export default function ActionDetail({ onBack }: ActionDetailProps) {
 						Intervention externe
 					</span>
 					<div className="flex flex-col gap-1">
-						<h1 className="text-[28px] font-bold text-gray-900">
+						<h1 className="text-3xl font-bold text-gray-900">
 							Mieux vivre le stress
 						</h1>
 						<p className="text-sm text-gray-900">
@@ -96,7 +96,7 @@ export default function ActionDetail({ onBack }: ActionDetailProps) {
 				</div>
 				<button
 					type="button"
-					className="flex items-center gap-2 h-[52px] border border-gray-900 rounded-lg px-8 py-3.5 text-sm font-bold text-gray-900 cursor-pointer hover:bg-gray-50 transition-colors shrink-0"
+					className="flex items-center gap-2 h-13 border border-gray-900 rounded-lg px-8 py-3.5 text-sm font-bold text-gray-900 cursor-pointer hover:bg-gray-50 transition-colors shrink-0"
 				>
 					<Phone size={20} />
 					Contacter Claire
@@ -181,7 +181,7 @@ export default function ActionDetail({ onBack }: ActionDetailProps) {
 				</div>
 
 				{/* Right column: Planifier */}
-				<div className="shrink-0 w-[440px] sticky top-0">
+				<div className="shrink-0 w-110 sticky top-0">
 					<PlanActionPanel />
 				</div>
 			</div>

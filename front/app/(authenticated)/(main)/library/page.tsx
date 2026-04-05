@@ -109,7 +109,7 @@ export default function Library() {
 		<main className="flex flex-col gap-5 h-full">
 			{/* Header */}
 			<div className="flex flex-col gap-2">
-				<h1 className="text-[28px] font-bold text-gray-900">
+				<h1 className="text-3xl font-bold text-gray-900">
 					Librairie d&apos;action
 				</h1>
 				<p className="text-lg text-gray-900">

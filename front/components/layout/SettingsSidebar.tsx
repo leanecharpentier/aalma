@@ -38,7 +38,7 @@ export default function SettingsSidebar() {
 	const pathname = usePathname();
 
 	return (
-		<aside className="flex flex-col h-full w-[224px] shrink-0 bg-gray-40 px-3 py-6 gap-3">
+		<aside className="flex flex-col h-full w-56 shrink-0 bg-gray-40 px-3 py-6 gap-3">
 			{/* Search */}
 			<div className="flex items-center bg-gray-40 border border-gray-100 rounded-lg px-3.5 py-2">
 				<span className="flex-1 text-xs text-gray-300">Search</span>

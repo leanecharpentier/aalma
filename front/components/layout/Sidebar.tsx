@@ -44,7 +44,7 @@ export default function Sidebar() {
 	const pathname = usePathname();
 
 	return (
-		<aside className="flex flex-col h-full w-[224px] shrink-0 bg-gray-40 px-3 py-6">
+		<aside className="flex flex-col h-full w-56 shrink-0 bg-gray-40 px-3 py-6">
 			<nav className="flex flex-col gap-3 grow">
 				{NAV_LINKS.map(({ label, href, icon: Icon }) => (
 					<Link

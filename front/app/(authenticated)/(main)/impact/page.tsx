@@ -38,7 +38,7 @@ export default function Impact() {
 		<main className="flex flex-col gap-5 h-full">
 			{/* Header */}
 			<div className="flex flex-col gap-2">
-				<h1 className="text-[28px] font-bold text-gray-900">
+				<h1 className="text-3xl font-bold text-gray-900">
 					Impact des actions
 				</h1>
 				<p className="text-lg text-gray-900">Résultats des actions menées</p>
@@ -46,8 +46,11 @@ export default function Impact() {
 
 			{/* Top row: Summary + Radar + ROI */}
 			<div className="flex gap-5 min-h-0">
-				<ImpactSummaryCard />
-				<RadarComparisonCard />
+				{/* Left card: Summary + Radar side by side */}
+				<div className="flex flex-1 gap-5 bg-gray-40 rounded-xl p-5 shadow-card-light min-w-0">
+					<ImpactSummaryCard />
+					<RadarComparisonCard />
+				</div>
 				<RoiCard />
 			</div>
 

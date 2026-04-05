@@ -64,14 +64,14 @@ export default function ActionCard({
 			<div className="flex gap-2.5 mt-5">
 				<button
 					type="button"
-					className="flex flex-1 items-center justify-center h-[52px] border border-gray-900 rounded-lg px-8 py-3.5 text-sm font-bold text-gray-900 cursor-pointer hover:bg-gray-50 transition-colors"
+					className="flex flex-1 items-center justify-center h-13 border border-gray-900 rounded-lg px-8 py-3.5 text-sm font-bold text-gray-900 cursor-pointer hover:bg-gray-50 transition-colors"
 					onClick={onDiscover}
 				>
 					Découvrir
 				</button>
 				<button
 					type="button"
-					className="flex items-center justify-center h-[52px] w-[52px] border border-gray-900 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors shrink-0"
+					className="flex items-center justify-center h-13 w-13 border border-gray-900 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors shrink-0"
 				>
 					<Heart size={24} />
 				</button>

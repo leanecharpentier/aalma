@@ -1,4 +1,4 @@
-import { TrendingDown, TrendingUp } from "lucide-react";
+import { Info, TrendingDown, TrendingUp } from "lucide-react";
 
 interface Indicator {
 	label: string;
@@ -40,16 +40,21 @@ function IndicatorCard({ label, value, unit, change, trend }: Indicator) {
 				{label}
 			</p>
 			<div className="flex flex-col items-center gap-2">
-				<span className="text-[40px] font-bold text-primary-500">{value}</span>
+				<span className="text-4xl font-bold text-primary-500">{value}</span>
 				<span className="text-sm text-gray-500">{unit}</span>
 			</div>
-			<div
-				className={`flex items-center gap-1 px-2 py-1 rounded-3xl text-xs font-bold ${
-					isUp ? "bg-green-50 text-green-600" : "bg-red-500/10 text-red-600"
-				}`}
-			>
-				{isUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-				{change}
+			<div className="flex items-center gap-2.5">
+				<div
+					className={`flex items-center gap-1 px-2 py-1 rounded-3xl text-xs font-bold ${
+						isUp
+							? "bg-green-50 text-green-600"
+							: "bg-red-500/10 text-red-600"
+					}`}
+				>
+					{isUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+					{change}
+				</div>
+				<Info size={18} className="text-gray-500" />
 			</div>
 		</div>
 	);
@@ -119,9 +124,9 @@ function EvolutionChart() {
 					<text
 						key={p.label + p.x}
 						x={p.x}
-						y={p.y - 8}
+						y={p.y + 16}
 						textAnchor="middle"
-						className="fill-gray-900 text-[8px] font-bold"
+						className="fill-gray-900 text-[8px] font-medium"
 					>
 						{p.label}
 					</text>
@@ -132,15 +137,15 @@ function EvolutionChart() {
 
 export default function ImpactSummaryCard() {
 	return (
-		<div className="flex flex-1 flex-col gap-5 bg-gray-40 rounded-xl p-5 shadow-card-light min-w-0">
+		<div className="flex flex-1 flex-col gap-3 min-w-0">
 			<h2 className="text-base font-bold text-gray-900">
 				Résumé impact global 2026
 			</h2>
 
 			{/* Key indicators */}
-			<div className="flex flex-col gap-3">
-				<h3 className="text-xs font-bold text-gray-900">Indicateurs clés</h3>
-				<div className="flex gap-2">
+			<div className="flex flex-col gap-1">
+				<h3 className="text-sm font-bold text-gray-500">Indicateurs clés</h3>
+				<div className="flex gap-1">
 					{INDICATORS.map((indicator) => (
 						<IndicatorCard key={indicator.label} {...indicator} />
 					))}
@@ -148,13 +153,11 @@ export default function ImpactSummaryCard() {
 			</div>
 
 			{/* Evolution chart */}
-			<div className="flex flex-col gap-2">
-				<div className="flex flex-col">
-					<h3 className="text-xs font-bold text-gray-900">
-						Évolution dans le temps
-					</h3>
-					<span className="text-xs text-gray-500">(Score aalma)</span>
-				</div>
+			<div className="flex flex-col gap-3.5">
+				<p className="text-sm font-bold text-gray-500">
+					Évolution dans le temps{" "}
+					<span className="text-xs font-medium">(Score aalma)</span>
+				</p>
 				<EvolutionChart />
 			</div>
 		</div>

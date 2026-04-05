@@ -27,7 +27,7 @@ function RecommendationCard({ text }: { text: string }) {
 
 export default function RecommendationSection() {
 	return (
-		<div className="relative flex flex-col gap-2 w-[470px] shrink-0 bg-primary-40 border border-primary-200 rounded-xl p-3.5 shadow-orange-glow overflow-hidden">
+		<div className="relative flex flex-col gap-2 w-full max-w-md shrink-0 bg-primary-40 border border-primary-200 rounded-xl p-3.5 shadow-orange-glow overflow-hidden">
 			<div className="flex flex-col gap-2 py-2 z-10">
 				<div className="flex flex-col gap-2">
 					<h2 className="text-base font-bold text-gray-900">Recommandation</h2>
@@ -42,7 +42,7 @@ export default function RecommendationSection() {
 			</div>
 
 			{/* Decorative halo */}
-			<div className="absolute top-0 right-0 w-[350px] h-[350px] rounded-full bg-gradient-radial from-primary-300/40 to-transparent pointer-events-none" />
+			<div className="absolute top-0 right-0 w-88 h-88 rounded-full bg-gradient-radial from-primary-300/40 to-transparent pointer-events-none" />
 		</div>
 	);
 }

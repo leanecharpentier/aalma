@@ -35,7 +35,7 @@ function RecommendationCard({ text }: { text: string }) {
 
 export default function RecommendationPanel() {
 	return (
-		<div className="relative flex flex-col bg-gray-40 rounded-xl p-5 shadow-card-light shrink-0 w-[317px] h-full">
+		<div className="relative flex flex-col bg-gray-40 rounded-xl p-5 shadow-card-light shrink-0 w-80 h-full">
 			<div className="relative flex flex-1 flex-col gap-2 bg-primary-40 border border-primary-200 rounded-xl p-3.5 shadow-orange-glow overflow-hidden min-h-0">
 				<div className="flex flex-col gap-2 py-2 z-10 h-full">
 					<div className="flex flex-col gap-2">
@@ -53,7 +53,7 @@ export default function RecommendationPanel() {
 				</div>
 
 				{/* Decorative halo */}
-				<div className="absolute top-0 right-0 w-[350px] h-[350px] rounded-full bg-gradient-radial from-primary-300/40 to-transparent pointer-events-none" />
+				<div className="absolute top-0 right-0 w-88 h-88 rounded-full bg-gradient-radial from-primary-300/40 to-transparent pointer-events-none" />
 			</div>
 		</div>
 	);

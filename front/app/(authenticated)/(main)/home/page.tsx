@@ -5,7 +5,7 @@ import ScoreSection from "./__components__/ScoreSection";
 
 export default function Home() {
 	return (
-		<main className="flex flex-col gap-5 h-full min-h-[700px]">
+		<main className="flex flex-col gap-5 h-full min-h-175">
 			{/* Top row: Score + Improvement */}
 			<div className="flex gap-5 flex-1 min-h-0">
 				<ScoreSection />

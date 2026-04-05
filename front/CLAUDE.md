@@ -126,6 +126,54 @@ export function Button({ className, ...props }) {
 }
 ```
 
+## CSS & Tailwind — Conventions Responsive
+
+### Approche : Desktop-first
+
+Cette webapp est destinée aux ordinateurs et tablettes uniquement. Ne pas optimiser pour mobile.
+
+Les classes Tailwind de base (sans préfixe) définissent le comportement sur **grand écran (≥ 1280px)**. On adapte ensuite vers le bas avec les breakpoints :
+
+| Breakpoint | Largeur     | Cible                  |
+|------------|-------------|------------------------|
+| base       | ≥ 1280px    | Desktop large (défaut) |
+| `lg:`      | ≥ 1024px    | Desktop standard       |
+| `md:`      | ≥ 768px     | Tablette               |
+
+En dessous de 768px : non prioritaire, mais l'interface ne doit pas être visuellement cassée.
+
+### Sizing — Règles strictes
+
+**INTERDIT** — Ne jamais utiliser de tailles px fixes pour les conteneurs de layout :
+```
+❌ w-[350px]  h-[200px]  min-w-[600px]
+```
+
+**AUTORISÉ** — Toujours utiliser des unités relatives ou les échelles Tailwind :
+```
+✅ Largeurs   → w-full, max-w-*, w-1/2, w-2/3, grid cols
+✅ Hauteurs   → min-h-*, h-screen, h-full, ou hauteur définie par le contenu
+✅ Padding / margin / gap → échelles Tailwind (p-4, gap-6, mx-8…)
+```
+
+**Exception autorisée** : les éléments UI atomiques (icônes, avatars, badges) peuvent avoir des tailles fixes en px.
+
+### Layout
+
+- Utiliser `flex` ou `grid` pour tous les conteneurs de mise en page
+- Pas de positionnement `absolute` pour les éléments de flux
+- Conteneur principal des pages : `w-full max-w-7xl mx-auto px-6`
+- Colonnes responsives : préférer `grid grid-cols-3 lg:grid-cols-2 md:grid-cols-1` aux widths fixes
+
+### Typographie
+
+- Toujours définir des tailles responsives : `text-base lg:text-sm`
+- Ne jamais fixer une taille de police en px arbitraire
+
+### Objectif
+
+Chaque composant doit s'afficher correctement de **768px à 1920px+** sans overflow ni layout cassé.
+
 ## Environment Variables
 
 - `NEXT_PUBLIC_API_URL` — Backend API URL (default `http://localhost:3000`)
