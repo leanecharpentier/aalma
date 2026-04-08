@@ -13,6 +13,6 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   entities: [path.join(__dirname, "typeorm/entities/**/*.{ts,js}")],
   migrations: [path.join(__dirname, "typeorm/migrations/**/*.ts")],
-  synchronize: true,
+  synchronize: false,
   logging: false,
 });
