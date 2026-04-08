@@ -31,7 +31,7 @@ export class QuestionService {
           .values(createQuestionDto)
           .execute();
 
-        if (createQuestionDto.type_id !== 3 && createQuestionDto.propositions) {
+        if (createQuestionDto.propositions) {
           createQuestionDto.propositions.forEach((proposition) => {
             proposition.question_id = result.identifiers[0].id;
             this.propositionService.create(proposition, connectedUser);
@@ -67,7 +67,7 @@ export class QuestionService {
       .getMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return await AppDataSource.getRepository(Question)
       .createQueryBuilder("question")
       .leftJoinAndSelect("question.propositions", "proposition")
@@ -76,7 +76,7 @@ export class QuestionService {
   }
 
   async update(
-    id: number,
+    id: string,
     updateQuestionDto: UpdateQuestionDto,
     connectedUser: User,
   ) {
@@ -98,7 +98,7 @@ export class QuestionService {
     }
   }
 
-  async remove(id: number, connectedUser: User) {
+  async remove(id: string, connectedUser: User) {
     try {
       await AppDataSource.getRepository(FormTemplateQuestion)
         .createQueryBuilder()

@@ -5,7 +5,7 @@ export class CreateQuestionDto {
   @ApiProperty()
   label: string;
   @ApiProperty()
-  type_id: number;
+  type_id: string;
   @ApiPropertyOptional()
   propositions?: Proposition[];
 }

@@ -27,6 +27,8 @@ export class ActivityLogService {
   async findAll() {
     return await AppDataSource.getRepository(ActivityLog)
       .createQueryBuilder("activity_log")
+      .leftJoinAndSelect("activity_log.user", "user")
+      .leftJoinAndSelect("user.role", "role")
       .orderBy("activity_log.createdAt", "DESC")
       .getMany();
   }

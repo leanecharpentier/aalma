@@ -53,7 +53,7 @@ export class PropositionController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async findOne(@Param("id") id: string) {
-    return await this.propositionService.findOne(+id);
+    return await this.propositionService.findOne(id);
   }
 
   @Patch(":id")
@@ -66,7 +66,7 @@ export class PropositionController {
   ) {
     const connectedUser = (req as any).user;
     const result = await this.propositionService.update(
-      +id,
+      id,
       updatePropositionDto,
       connectedUser,
     );
@@ -85,7 +85,7 @@ export class PropositionController {
   @Roles([SUPER_ADMIN_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
-    const result = await this.propositionService.remove(+id, connectedUser);
+    const result = await this.propositionService.remove(id, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,

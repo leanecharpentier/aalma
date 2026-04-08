@@ -45,10 +45,10 @@ export class User {
   image?: string;
 
   @Column("integer", { name: "role_id", nullable: true })
-  role_id?: number;
+  role_id?: string;
 
   @Column("integer", { name: "team_id", nullable: true })
-  team_id?: number;
+  team_id?: string;
 
   @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;
@@ -89,12 +89,12 @@ export class User {
     return user?.team || null;
   }
 
-  async getCompanyId(): Promise<number> {
+  async getCompanyId(): Promise<string> {
     const team = await this.getTeam();
     if (team) {
       const company = await team.getCompany();
-      return company?.id || 0;
+      return company?.id || "";
     }
-    return 0;
+    return "";
   }
 }

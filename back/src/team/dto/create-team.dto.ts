@@ -4,5 +4,5 @@ export class CreateTeamDto {
   @ApiProperty()
   name: string;
   @ApiProperty()
-  company_id: number;
+  company_id: string;
 }

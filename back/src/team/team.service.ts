@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { CreateTeamDto } from "./dto/create-team.dto";
-import { UpdateTeamDto } from "./dto/update-team.dto";
 import { AppDataSource } from "DataSource";
-import { Team } from "typeorm/entities/Team";
-import { InsertResult } from "typeorm";
-import { UpdateResult } from "typeorm/browser";
-import { DeleteResult } from "typeorm/browser";
-import { User } from "typeorm/entities/User";
+import { Injectable } from "@nestjs/common";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { InsertResult } from "typeorm";
+import { DeleteResult, UpdateResult } from "typeorm/browser";
 import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
+import { Team } from "typeorm/entities/Team";
+import { User } from "typeorm/entities/User";
+import { CreateTeamDto } from "./dto/create-team.dto";
+import { GetTeamsDto } from "./dto/get-teams.dto";
+import { UpdateTeamDto } from "./dto/update-team.dto";
 
 @Injectable()
 export class TeamService {
@@ -64,10 +64,13 @@ export class TeamService {
    * Get all teams in the database.
    * @returns Promise<Team[]>
    */
-  async findAll(): Promise<Team[]> {
-    return await AppDataSource.getRepository(Team)
-      .createQueryBuilder("team")
-      .getMany();
+  async findAll(getTeamsDto?: GetTeamsDto): Promise<Team[]> {
+    const { company_id } = getTeamsDto ?? {};
+    const qb = AppDataSource.getRepository(Team).createQueryBuilder("team");
+    if (company_id) {
+      qb.where("team.company_id = :company_id", { company_id });
+    }
+    return qb.getMany();
   }
 
   /**
@@ -75,7 +78,7 @@ export class TeamService {
    * @param id number id of the team to get
    * @returns Promise<Team | null>
    */
-  async findOne(id: number): Promise<Team | null> {
+  async findOne(id: string): Promise<Team | null> {
     return await AppDataSource.getRepository(Team)
       .createQueryBuilder("team")
       .where("team.id = :id", { id })
@@ -87,7 +90,7 @@ export class TeamService {
    * @param id number id of the team to get employees of
    * @returns Promise<Team | null>
    */
-  async findEmployees(id: number): Promise<Team | null> {
+  async findEmployees(id: string): Promise<Team | null> {
     return await AppDataSource.getRepository(Team)
       .createQueryBuilder("team")
       .leftJoinAndSelect("team.users", "user")
@@ -102,7 +105,7 @@ export class TeamService {
    * @returns Promise<UpdateResult>
    */
   async update(
-    id: number,
+    id: string,
     updateTeamDto: UpdateTeamDto,
     connectedUser: User,
   ): Promise<UpdateResult | { success: boolean; message: string }> {
@@ -130,7 +133,7 @@ export class TeamService {
    * @returns Promise<DeleteResult>
    */
   async remove(
-    id: number,
+    id: string,
     connectedUser: User,
   ): Promise<DeleteResult | { success: boolean; message: string }> {
     try {

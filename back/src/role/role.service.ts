@@ -7,17 +7,18 @@ export class RoleService {
   async findAll() {
     return await AppDataSource.getRepository(Role)
       .createQueryBuilder("role")
+      .loadRelationCountAndMap("role.userCount", "role.users")
       .getMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return await AppDataSource.getRepository(Role)
       .createQueryBuilder("role")
       .where("role.id = :id", { id })
       .getOne();
   }
 
-  async findEmployees(id: number) {
+  async findEmployees(id: string) {
     return await AppDataSource.getRepository(Role)
       .createQueryBuilder("role")
       .leftJoinAndSelect("role.users", "user")

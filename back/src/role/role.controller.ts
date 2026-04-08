@@ -29,13 +29,13 @@ export class RoleController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
   findOne(@Param("id") id: string) {
-    return this.roleService.findOne(+id);
+    return this.roleService.findOne(id);
   }
 
   @Get(":id/employees")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
   findEmployees(@Param("id") id: string) {
-    return this.roleService.findEmployees(+id);
+    return this.roleService.findEmployees(id);
   }
 }

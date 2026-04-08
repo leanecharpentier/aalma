@@ -63,7 +63,7 @@ export class FormTemplateController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
   async findOne(@Param("id") id: string) {
-    return await this.formTemplateService.findOne(+id);
+    return await this.formTemplateService.findOne(id);
   }
 
   @Patch(":id")
@@ -76,7 +76,7 @@ export class FormTemplateController {
   ) {
     const connectedUser = (req as any).user;
     const result = await this.formTemplateService.update(
-      +id,
+      id,
       updateFormTemplateDto,
       connectedUser,
     );
@@ -95,7 +95,7 @@ export class FormTemplateController {
   @Roles([SUPER_ADMIN_ROLE_ID])
   async remove(@Req() req, @Param("id") id: string) {
     const connectedUser = (req as any).user;
-    const result = await this.formTemplateService.remove(+id, connectedUser);
+    const result = await this.formTemplateService.remove(id, connectedUser);
     if (!("success" in result && result.success === false)) {
       this.activityLogService.log({
         userId: connectedUser.id,

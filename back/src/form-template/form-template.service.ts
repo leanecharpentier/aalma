@@ -35,7 +35,10 @@ export class FormTemplateService {
           AppDataSource.getRepository(FormTemplateQuestion)
             .createQueryBuilder("form_template")
             .insert()
-            .values({ template_id: result.identifiers[0].id, question_id })
+            .values({
+              template: { id: result.identifiers[0].id },
+              question: { id: question_id },
+            })
             .execute();
         });
 
@@ -69,7 +72,7 @@ export class FormTemplateService {
       .getMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const template = await AppDataSource.getRepository(FormTemplate)
       .createQueryBuilder("form_template")
       .leftJoinAndSelect("form_template.questions", "question")
@@ -90,7 +93,7 @@ export class FormTemplateService {
   }
 
   async update(
-    id: number,
+    id: string,
     updateFormTemplateDto: UpdateFormTemplateDto,
     connectedUser: User,
   ) {
@@ -139,7 +142,7 @@ export class FormTemplateService {
     }
   }
 
-  async remove(id: number, connectedUser: User) {
+  async remove(id: string, connectedUser: User) {
     try {
       await AppDataSource.getRepository(FormTemplateQuestion)
         .createQueryBuilder()

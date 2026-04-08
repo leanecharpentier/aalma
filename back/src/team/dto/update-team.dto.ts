@@ -6,5 +6,5 @@ export class UpdateTeamDto extends PartialType(CreateTeamDto) {
   @ApiPropertyOptional()
   name?: string | undefined;
   @ApiPropertyOptional()
-  company_id?: number | undefined;
+  company_id?: string | undefined;
 }

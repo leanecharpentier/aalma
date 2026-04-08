@@ -57,7 +57,7 @@ export class PropositionService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return await AppDataSource.getRepository(Proposition)
       .createQueryBuilder("proposition")
       .where("proposition.id = :id", { id })
@@ -65,7 +65,7 @@ export class PropositionService {
   }
 
   async update(
-    id: number,
+    id: string,
     updatePropositionDto: UpdatePropositionDto,
     connectedUser: User,
   ) {
@@ -87,7 +87,7 @@ export class PropositionService {
     }
   }
 
-  async remove(id: number, connectedUser: User) {
+  async remove(id: string, connectedUser: User) {
     try {
       return await AppDataSource.getRepository(Proposition)
         .createQueryBuilder("question")

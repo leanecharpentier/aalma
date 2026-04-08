@@ -12,7 +12,7 @@ export class UpdateUserDto extends PartialType(
   @ApiPropertyOptional()
   lastname?: string;
   @ApiPropertyOptional()
-  role_id?: number;
+  role_id?: string;
   @ApiPropertyOptional()
-  team_id?: number;
+  team_id?: string;
 }

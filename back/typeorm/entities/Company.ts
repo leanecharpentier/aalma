@@ -14,14 +14,14 @@ import { Form } from "./Form";
 
 @Entity("company")
 export class Company {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   name: string;
 
   @Column("text", { name: "color_id", nullable: true })
-  color_id?: number;
+  color_id?: string;
 
   @Column({ nullable: true })
   googleDomain: string;
