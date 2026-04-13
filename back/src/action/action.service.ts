@@ -17,8 +17,12 @@ export class ActionService {
       .getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} action`;
+  async findOne(id: string) {
+    return await AppDataSource.getRepository(Action)
+      .createQueryBuilder("action")
+      .leftJoinAndSelect("action.category", "category")
+      .where("action.id = :id", { id })
+      .getOne();
   }
 
   update(id: number, updateActionDto: UpdateActionDto) {

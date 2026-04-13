@@ -42,13 +42,22 @@ export class ActionController {
     MANAGER_ROLE_ID,
     HEALTH_REFEREE_ROLE_ID,
   ])
-  findAll() {
-    return this.actionService.findAll();
+  async findAll() {
+    return await this.actionService.findAll();
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.actionService.findOne(+id);
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([
+    SUPER_ADMIN_ROLE_ID,
+    ADMIN_ROLE_ID,
+    HR_ROLE_ID,
+    CEO_ROLE_ID,
+    MANAGER_ROLE_ID,
+    HEALTH_REFEREE_ROLE_ID,
+  ])
+  async findOne(@Param("id") id: string) {
+    return await this.actionService.findOne(id);
   }
 
   @Patch(":id")
