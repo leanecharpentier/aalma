@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Search } from "@nestjs/common";
 import { CreateActionDto } from "./dto/create-action.dto";
 import { UpdateActionDto } from "./dto/update-action.dto";
 import { AppDataSource } from "DataSource";
@@ -10,11 +10,25 @@ export class ActionService {
     return "This action adds a new action";
   }
 
-  async findAll() {
-    return await AppDataSource.getRepository(Action)
+  async findAll(filters: object) {
+    const query = AppDataSource.getRepository(Action)
       .createQueryBuilder("action")
-      .leftJoinAndSelect("action.category", "category")
-      .getMany();
+      .leftJoinAndSelect("action.category", "category");
+    if (Object.keys(filters).length !== 0) {
+      Object.keys(filters).forEach((property) => {
+        if (property === "search") {
+          query.andWhere(
+            "action.name LIKE :search OR description LIKE :search",
+            {
+              search: `%${filters[property]}%`,
+            },
+          );
+        } else {
+          query.andWhere(`${property} = :value`, { value: filters[property] });
+        }
+      });
+    }
+    return await query.orderBy("category.id").getMany();
   }
 
   async findOne(id: string) {

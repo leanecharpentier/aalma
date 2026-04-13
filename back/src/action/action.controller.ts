@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from "@nestjs/common";
 import { CreateActionDto } from "./dto/create-action.dto";
 import { UpdateActionDto } from "./dto/update-action.dto";
@@ -42,8 +43,8 @@ export class ActionController {
     MANAGER_ROLE_ID,
     HEALTH_REFEREE_ROLE_ID,
   ])
-  async findAll() {
-    return await this.actionService.findAll();
+  async findAll(@Query() filters: object) {
+    return await this.actionService.findAll(filters);
   }
 
   @Get(":id")
