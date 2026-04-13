@@ -3,11 +3,35 @@ import { CreateActionDto } from "./dto/create-action.dto";
 import { UpdateActionDto } from "./dto/update-action.dto";
 import { AppDataSource } from "DataSource";
 import { Action } from "typeorm/entities/Action";
+import { User } from "typeorm/entities/User";
+import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
+import { SUPER_ADMIN_ROLE_ID } from "typeorm/entities/Role";
 
 @Injectable()
 export class ActionService {
-  create(createActionDto: CreateActionDto) {
-    return "This action adds a new action";
+  constructor(private readonly activityLogService: ActivityLogService) {}
+
+  async create(createActionDto: CreateActionDto, connectedUser: User) {
+    try {
+      const result = await AppDataSource.getRepository(Action)
+        .createQueryBuilder("action")
+        .insert()
+        .values({
+          ...createActionDto,
+          system: connectedUser.role?.name === SUPER_ADMIN_ROLE_ID,
+        })
+        .execute();
+      return result;
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "action.created",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 
   async findAll(filters: object) {
@@ -39,11 +63,45 @@ export class ActionService {
       .getOne();
   }
 
-  update(id: number, updateActionDto: UpdateActionDto) {
-    return `This action updates a #${id} action`;
+  async update(
+    id: string,
+    updateActionDto: UpdateActionDto,
+    connectedUser: User,
+  ) {
+    try {
+      const result = await AppDataSource.getRepository(Action)
+        .createQueryBuilder("action")
+        .update()
+        .set(updateActionDto)
+        .where("action.id = :id", { id })
+        .execute();
+      return result;
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "action.updated",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} action`;
+  async remove(id: string, connectedUser: User) {
+    try {
+      return await AppDataSource.getRepository(Action)
+        .createQueryBuilder("action")
+        .delete()
+        .where("action.id = :id", { id })
+        .execute();
+    } catch (e) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "action.deleted",
+        status: ACTIVITY_FAIL,
+        details: e.detail,
+      });
+      return { success: false, message: e.detail };
+    }
   }
 }

@@ -15,10 +15,10 @@ export class Action {
   @Column()
   name: string;
 
-  @Column("text", { name: "category_id", nullable: true })
-  category_id?: string;
+  @Column("text", { name: "category_id" })
+  category_id: string;
 
-  @ManyToOne(() => Category, { nullable: true })
+  @ManyToOne(() => Category)
   @JoinColumn({ name: "category_id" })
   category?: Category;
 

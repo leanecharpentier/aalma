@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  Req,
 } from "@nestjs/common";
 import { CreateActionDto } from "./dto/create-action.dto";
 import { UpdateActionDto } from "./dto/update-action.dto";
@@ -23,14 +24,33 @@ import {
   MANAGER_ROLE_ID,
   SUPER_ADMIN_ROLE_ID,
 } from "typeorm/entities/Role";
+import { ActivityLogService } from "src/activity-log/activity-log.service";
+import { ACTIVITY_SUCCESS } from "typeorm/entities/ActivityLog";
 
 @Controller("action")
 export class ActionController {
-  constructor(private readonly actionService: ActionService) {}
+  constructor(
+    private readonly actionService: ActionService,
+    private readonly activityLogService: ActivityLogService,
+  ) {}
 
   @Post()
-  create(@Body() createActionDto: CreateActionDto) {
-    return this.actionService.create(createActionDto);
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([SUPER_ADMIN_ROLE_ID])
+  async create(@Body() createActionDto: CreateActionDto, @Req() req) {
+    const connectedUser = (req as any).user;
+    const result = await this.actionService.create(
+      createActionDto,
+      connectedUser,
+    );
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "action.created",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 
   @Get()
@@ -62,12 +82,42 @@ export class ActionController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateActionDto: UpdateActionDto) {
-    return this.actionService.update(+id, updateActionDto);
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([SUPER_ADMIN_ROLE_ID])
+  async update(
+    @Param("id") id: string,
+    @Body() updateActionDto: UpdateActionDto,
+    @Req() req,
+  ) {
+    const connectedUser = (req as any).user;
+    const result = await this.actionService.update(
+      id,
+      updateActionDto,
+      connectedUser,
+    );
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "action.updated",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.actionService.remove(+id);
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([SUPER_ADMIN_ROLE_ID])
+  async remove(@Param("id") id: string, @Req() req) {
+    const connectedUser = (req as any).user;
+    const result = await this.actionService.remove(id, connectedUser);
+    if (!("success" in result && result.success === false)) {
+      this.activityLogService.log({
+        userId: connectedUser.id,
+        action: "action.deleted",
+        status: ACTIVITY_SUCCESS,
+      });
+    }
+    return result;
   }
 }
