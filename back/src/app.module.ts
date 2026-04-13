@@ -16,6 +16,7 @@ import { RoleModule } from "./role/role.module";
 import { TeamModule } from "./team/team.module";
 import { UserModule } from "./user/user.module";
 import { ActionModule } from "./action/action.module";
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ActionModule } from "./action/action.module";
     AnswerModule,
     NotificationModule,
     ActionModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
