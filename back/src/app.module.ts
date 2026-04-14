@@ -15,6 +15,7 @@ import { QuestionModule } from "./question/question.module";
 import { RoleModule } from "./role/role.module";
 import { TeamModule } from "./team/team.module";
 import { UserModule } from "./user/user.module";
+import { KpiModule } from './kpi/kpi.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UserModule } from "./user/user.module";
     FormModule,
     AnswerModule,
     NotificationModule,
+    KpiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
