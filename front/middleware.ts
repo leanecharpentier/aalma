@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { authClient } from "./lib/auth-api";
 
 const PUBLIC_PATHS = ["/auth/login", "/auth/callback"];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const sessionToken = request.cookies.get("better-auth.session_token")?.value;
-
+  const { data: session } = await authClient.getSession();
   const isPublic = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
-
-  if (!sessionToken && !isPublic) {
+  if (!isPublic) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  if (sessionToken && (isPublic || pathname === "/")) {
+  if (isPublic || pathname === "/") {
     return NextResponse.redirect(new URL("/home", request.url));
   }
 

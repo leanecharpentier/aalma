@@ -1,3 +1,5 @@
+import { createAuthClient } from "better-auth/client";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 
 type SignInPayload = {
@@ -20,8 +22,15 @@ export class ApiError extends Error {
   }
 }
 
+export const authClient = createAuthClient({
+  baseURL: process.env.API_BASE_URL,
+  fetchOptions: {
+    credentials: "include",
+  },
+});
+
 export async function signIn(payload: SignInPayload) {
-  const response = await fetch(`${API_BASE_URL}/auth/signin`, {
+  const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

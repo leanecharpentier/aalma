@@ -7,9 +7,10 @@ import {
   Get,
   Param,
   Query,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { AuthGuard } from "./auth.guard";
+import { auth } from "src/utils/auth";
 
 @Controller("auth")
 export class AuthController {
@@ -25,6 +26,13 @@ export class AuthController {
 
     const body = await result.json();
     res.status(result.status).json(body);
+  }
+
+  @Get("get-session")
+  async session(@Req() request) {
+    return await auth.api.getSession({
+      headers: request.headers,
+    });
   }
 
   @Post("signup")
