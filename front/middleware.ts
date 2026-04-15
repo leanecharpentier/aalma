@@ -7,11 +7,11 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const { data: session } = await authClient.getSession();
   const isPublic = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
-  if (!isPublic) {
+  if (!session && !isPublic) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  if (isPublic || pathname === "/") {
+  if (!session && (isPublic || pathname === "/")) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
 
