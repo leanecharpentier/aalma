@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  if (!session && (isPublic || pathname === "/")) {
+  if (session && (isPublic || pathname === "/")) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
 
