@@ -22,15 +22,19 @@ export class ApiError extends Error {
   }
 }
 
+const getBaseURL = () => {
+  if (typeof window !== "undefined") {
+    return `${window.location.origin}/api/backend`;
+  }
+  return `${process.env.NEXT_PUBLIC_APP_URL}/api/backend`;
+};
+
 export const authClient = createAuthClient({
-  baseURL: process.env.API_BASE_URL,
-  fetchOptions: {
-    credentials: "include",
-  },
+  baseURL: getBaseURL(),
 });
 
 export async function signIn(payload: SignInPayload) {
-  const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
+  const response = await fetch(`/api/backend/auth/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -40,9 +44,9 @@ export async function signIn(payload: SignInPayload) {
   });
 
   if (!response.ok) {
-    const errorBody = (await response.json().catch(() => null)) as
-      | ApiErrorBody
-      | null;
+    const errorBody = (await response
+      .json()
+      .catch(() => null)) as ApiErrorBody | null;
 
     throw new ApiError(
       errorBody?.message ?? errorBody?.error ?? "Echec de la connexion",
