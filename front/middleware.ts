@@ -41,12 +41,8 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// export const config = {
-//   matcher: ["/((?!_next/static|_next/image|favicon.ico|images|.*\\..*).*)"],
-// };
-// test redeploy
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|images|api/backend|api/debug-session|.*\\..*).*)",
+    "/((?!_next/static|_next/image|favicon.ico|images|api/backend|.*\\..*).*)",
   ],
 };
