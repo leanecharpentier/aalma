@@ -18,5 +18,5 @@ export type ActivityLog = {
 };
 
 export async function fetchActivityLogs(): Promise<ActivityLog[]> {
-  return apiFetch<ActivityLog[]>("/api/activity-log");
+  return apiFetch<ActivityLog[]>("/activity-log");
 }

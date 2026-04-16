@@ -8,7 +8,7 @@ export default function AuthenticatedLayout({
   return (
     <div className="flex h-full w-full">
       <Sidebar />
-      <section className="flex flex-col grow overflow-y-auto p-6">
+      <section className="flex flex-col grow overflow-y-auto p-6 min-h-0">
         {children}
       </section>
     </div>

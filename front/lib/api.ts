@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000"}/api`;
 
 type ApiErrorBody = {
   message?: string;
@@ -42,9 +42,9 @@ export async function apiFetch<T>(
       redirect("/forbidden");
     }
 
-    const errorBody = (await response.json().catch(() => null)) as
-      | ApiErrorBody
-      | null;
+    const errorBody = (await response
+      .json()
+      .catch(() => null)) as ApiErrorBody | null;
 
     throw new ApiError(
       errorBody?.message ?? errorBody?.error ?? "Une erreur est survenue",

@@ -8,7 +8,7 @@ export default function AuthenticatedLayout({
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       <Header />
-      <main className="flex grow overflow-hidden">{children}</main>
+      <main className="flex grow overflow-hidden min-h-0">{children}</main>
     </div>
   );
 }

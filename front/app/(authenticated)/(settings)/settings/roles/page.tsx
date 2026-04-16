@@ -1,10 +1,10 @@
 import { Download, Plus } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { fetchRoles } from "@/features/roles/actions/fetch-roles";
 import {
-  fetchActivityLogs,
   type ActivityLog,
+  fetchActivityLogs,
 } from "@/features/activity-log/actions/fetch-activity-logs";
+import { fetchRoles } from "@/features/roles/actions/fetch-roles";
 import type { ActivityEntry } from "./__components__/ActivityHistory";
 import ActivityHistory from "./__components__/ActivityHistory";
 import RoleCard from "./__components__/RoleCard";

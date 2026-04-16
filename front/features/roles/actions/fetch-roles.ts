@@ -9,5 +9,5 @@ export type Role = {
 };
 
 export async function fetchRoles(): Promise<Role[]> {
-  return apiFetch<Role[]>("/api/role");
+  return apiFetch<Role[]>("/role");
 }
