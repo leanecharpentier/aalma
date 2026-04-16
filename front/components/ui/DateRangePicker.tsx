@@ -6,8 +6,6 @@ import {
   Button,
   CalendarCell,
   CalendarGrid,
-  DateInput,
-  DateSegment,
   Dialog,
   Group,
   Heading,

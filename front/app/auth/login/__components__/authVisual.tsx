@@ -1,4 +1,3 @@
-import { Linkedin } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
 type Props = {

@@ -1,4 +1,4 @@
-import { PencilLine, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { tv } from "tailwind-variants";
 import Button from "@/components/ui/Button";
 

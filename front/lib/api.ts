@@ -42,9 +42,9 @@ export async function apiFetch<T>(
       redirect("/forbidden");
     }
 
-    const errorBody = (await response.json().catch(() => null)) as
-      | ApiErrorBody
-      | null;
+    const errorBody = (await response
+      .json()
+      .catch(() => null)) as ApiErrorBody | null;
 
     throw new ApiError(
       errorBody?.message ?? errorBody?.error ?? "Une erreur est survenue",
