@@ -1,11 +1,8 @@
-const DIMENSIONS = [
-  { label: "90", valueBefore: 75, valueAfter: 90 },
-  { label: "84", valueBefore: 70, valueAfter: 84 },
-  { label: "92", valueBefore: 80, valueAfter: 92 },
-  { label: "65", valueBefore: 55, valueAfter: 65 },
-  { label: "72", valueBefore: 60, valueAfter: 72 },
-  { label: "76", valueBefore: 65, valueAfter: 76 },
-];
+import type { RadarComparisonDimension } from "@/features/impact/actions/fetch-radar-comparison";
+
+interface RadarComparisonCardProps {
+  dimensions: RadarComparisonDimension[];
+}
 
 const CENTER = 140;
 const MAX_RADIUS = 90;
@@ -38,9 +35,11 @@ function dataPolygon(values: number[]) {
     .join(" ");
 }
 
-export default function RadarComparisonCard() {
-  const beforeValues = DIMENSIONS.map((d) => d.valueBefore);
-  const afterValues = DIMENSIONS.map((d) => d.valueAfter);
+export default function RadarComparisonCard({
+  dimensions,
+}: RadarComparisonCardProps) {
+  const beforeValues = dimensions.map((d) => d.valueBefore);
+  const afterValues = dimensions.map((d) => d.valueAfter);
 
   return (
     <div className="flex flex-1 flex-col items-center justify-between border border-gray-100 rounded-xl p-3.5 min-w-0">
@@ -68,7 +67,7 @@ export default function RadarComparisonCard() {
         ))}
 
         {/* Axes */}
-        {DIMENSIONS.map((d, i) => {
+        {dimensions.map((d, i) => {
           const { x, y } = polarToCartesian(i * 60, MAX_RADIUS);
           return (
             <line
@@ -108,7 +107,7 @@ export default function RadarComparisonCard() {
           const { x, y } = polarToCartesian(i * 60, r);
           return (
             <circle
-              key={DIMENSIONS[i].label}
+              key={dimensions[i].label}
               cx={x}
               cy={y}
               r="4"
@@ -118,7 +117,7 @@ export default function RadarComparisonCard() {
         })}
 
         {/* Value labels */}
-        {DIMENSIONS.map((d, i) => {
+        {dimensions.map((d, i) => {
           const { x, y } = polarToCartesian(i * 60, MAX_RADIUS + 18);
           return (
             <text
