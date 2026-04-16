@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between bg-gray-40 p-6 overflow-hidden border-b-2 border-gray-50">
+    <header className="flex items-center justify-between bg-gray-40 p-6 overflow-hidden border-b-2 border-gray-50 shrink-0">
       {/* Left: Logos + Search */}
       <div className="flex items-center gap-8 min-w-2xl">
         {/* Logos */}
