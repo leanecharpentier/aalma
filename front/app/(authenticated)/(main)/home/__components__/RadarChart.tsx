@@ -1,11 +1,4 @@
-const DIMENSIONS = [
-  { label: "Stresse", value: 90 },
-  { label: "Reconnaissance", value: 84 },
-  { label: "Vie perso/pro", value: 92 },
-  { label: "Relation d'equipe", value: 72 },
-  { label: "Charge de travail", value: 65 },
-  { label: "Engagement", value: 76 },
-];
+import type { RadarDimension } from "@/features/dashboard/actions/fetch-score";
 
 const CENTER = 140;
 const MAX_RADIUS = 95;
@@ -28,8 +21,12 @@ function hexagonPoints(radius: number) {
     .join(" ");
 }
 
-export default function RadarChart() {
-  const dataPoints = DIMENSIONS.map((d, i) => {
+interface RadarChartProps {
+  dimensions: RadarDimension[];
+}
+
+export default function RadarChart({ dimensions }: RadarChartProps) {
+  const dataPoints = dimensions.map((d, i) => {
     const r = (d.value / 100) * MAX_RADIUS;
     return polarToCartesian(i * 60, r);
   });
@@ -56,7 +53,7 @@ export default function RadarChart() {
       ))}
 
       {/* Axes */}
-      {DIMENSIONS.map((d, i) => {
+      {dimensions.map((d, i) => {
         const { x, y } = polarToCartesian(i * 60, MAX_RADIUS);
         return (
           <line
@@ -83,7 +80,7 @@ export default function RadarChart() {
       {/* Data points */}
       {/* {dataPoints.map((p, i) => (
         <circle
-          key={DIMENSIONS[i].label}
+          key={dimensions[i].label}
           cx={p.x}
           cy={p.y}
           r="0"
@@ -92,7 +89,7 @@ export default function RadarChart() {
       ))} */}
 
       {/* Value labels */}
-      {DIMENSIONS.map((d, i) => {
+      {dimensions.map((d, i) => {
         const { x, y } = polarToCartesian(i * 60, MAX_RADIUS + 20);
         return (
           <text

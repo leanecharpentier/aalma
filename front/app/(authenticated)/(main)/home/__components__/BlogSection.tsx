@@ -1,5 +1,10 @@
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import type { BlogArticle } from "@/features/dashboard/actions/fetch-blog-articles";
+
+interface BlogSectionProps {
+  articles: BlogArticle[];
+}
 
 function Badge({ label }: { label: string }) {
   return (
@@ -23,24 +28,22 @@ function DiscoverLink() {
   );
 }
 
-function ArticleCardWithImage() {
+function ArticleCardWithImage({ article }: { article: BlogArticle }) {
   return (
     <div className="flex flex-col gap-3 bg-gray-50 border border-gray-100 rounded-xl p-3 h-89 w-68.5 shrink-0">
       <div className="relative flex-1 rounded-lg overflow-hidden">
         <Image
-          src="/images/home/blog-article.jpg"
+          src={article.image as string}
           alt="Article sante mentale"
           fill
           className="object-cover"
         />
       </div>
       <div className="flex flex-col gap-3.5">
-        <Badge label="Grande cause" />
+        <Badge label={article.badge} />
         <div className="flex flex-col gap-2 text-gray-900">
-          <h3 className="text-base font-bold">
-            Charte nationale sante mentale
-          </h3>
-          <p className="text-xs">28 aout 2026 - Gouvernement</p>
+          <h3 className="text-base font-bold">{article.title}</h3>
+          <p className="text-xs">{article.source}</p>
         </div>
       </div>
       <DiscoverLink />
@@ -48,22 +51,14 @@ function ArticleCardWithImage() {
   );
 }
 
-function ArticleCardText({
-  badge,
-  title,
-  source,
-}: {
-  badge: string;
-  title: string;
-  source: string;
-}) {
+function ArticleCardText({ article }: { article: BlogArticle }) {
   return (
     <div className="flex flex-1 flex-col justify-between bg-gray-50 border border-gray-100 rounded-xl p-3 min-h-0">
       <div className="flex flex-col gap-3.5">
-        <Badge label={badge} />
+        <Badge label={article.badge} />
         <div className="flex flex-col gap-2 text-gray-900">
-          <h3 className="text-base font-bold">{title}</h3>
-          <p className="text-xs">{source}</p>
+          <h3 className="text-base font-bold">{article.title}</h3>
+          <p className="text-xs">{article.source}</p>
         </div>
       </div>
       <DiscoverLink />
@@ -71,25 +66,21 @@ function ArticleCardText({
   );
 }
 
-export default function BlogSection() {
+export default function BlogSection({ articles }: BlogSectionProps) {
+  const imageArticle = articles.find((a) => a.image);
+  const textArticles = articles.filter((a) => !a.image);
+
   return (
     <div className="flex flex-1 flex-col gap-5 bg-gray-40 rounded-xl p-5 overflow-hidden shadow-card-light min-w-0">
       <h2 className="text-base font-bold text-gray-900">Blog</h2>
 
       <div className="flex flex-1 gap-5 min-h-0">
-        <ArticleCardWithImage />
+        {imageArticle && <ArticleCardWithImage article={imageArticle} />}
 
         <div className="flex flex-1 flex-col gap-5 min-w-0 min-h-0">
-          <ArticleCardText
-            badge="Article"
-            title="Sante mentale au travail : les 4 grands constats 2025"
-            source="Janvier 2026 - Moka.care x GHU Paris"
-          />
-          <ArticleCardText
-            badge="Evenement"
-            title={`SISM 2025 — \u00ab Pour notre sante mentale, reparons le lien social \u00bb`}
-            source="6-19 octobre 2025 - Semaines d'Information sur la Sante Mentale"
-          />
+          {textArticles.map((article) => (
+            <ArticleCardText key={article.id} article={article} />
+          ))}
         </div>
       </div>
     </div>
