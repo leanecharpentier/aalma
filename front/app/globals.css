@@ -5,7 +5,7 @@
 }
 
 @theme {
-  /* --display-title-1: 72px;
+	/* --display-title-1: 72px;
   --display-title-2: 64px;
   --display-title-3: 56px;
   --display-title-4: 48px;
@@ -21,39 +21,46 @@
   --text-body-small: 14px;
   --text-body-smaller: 12px; */
 
-  --color-primary-800: #572500;
-  --color-primary-700: #8A3B00;
-  --color-primary-600: #BD5000;
-  --color-primary-500: #F26700;
-  --color-primary-400: #FF8124;
-  --color-primary-300: #FF9E57;
-  --color-primary-200: #FFBC8A;
-  --color-primary-100: #FFBF8F;
-  --color-primary-50: #FFDCC2;
-  --color-primary-40: #FFF9F5;
+	--color-primary-800: #572500;
+	--color-primary-700: #8a3b00;
+	--color-primary-600: #bd5000;
+	--color-primary-500: #f26700;
+	--color-primary-400: #ff8124;
+	--color-primary-300: #ff9e57;
+	--color-primary-200: #ffbc8a;
+	--color-primary-100: #ffbf8f;
+	--color-primary-50: #ffdcc2;
+	--color-primary-40: #fff9f5;
 
-  --color-gray-900: #1F1F1F;
-  --color-gray-800: #303030;
-  --color-gray-700: #4A4A4A;
-  --color-gray-600: #636363;
-  --color-gray-500: #7D7D7D;
-  --color-gray-400: #969696;
-  --color-gray-300: #B0B0B0;
-  --color-gray-200: #C9C9C9;
-  --color-gray-100: #E3E3E3;
-  --color-gray-50: #F2F2F2;
-  --color-gray-40: #FCFCFC;
+	--color-gray-900: #1f1f1f;
+	--color-gray-800: #303030;
+	--color-gray-700: #4a4a4a;
+	--color-gray-600: #636363;
+	--color-gray-500: #7d7d7d;
+	--color-gray-400: #969696;
+	--color-gray-300: #b0b0b0;
+	--color-gray-200: #c9c9c9;
+	--color-gray-100: #e3e3e3;
+	--color-gray-50: #f2f2f2;
+	--color-gray-40: #fcfcfc;
 
-  --color-red-500: #F82D0C;
+	--color-red-500: #f82d0c;
+	--color-red-600: #c0392b;
 
-  --color-green-500: #4BD426;
+	--color-green-500: #4bd426;
+	--color-green-600: #16714c;
+	--color-green-50: #f0fbf6;
 
-  --shadow-card: 5px 7px 58px 0 rgba(31, 31, 31, 0.12);
+	--color-yellow-500: #f5bf23;
+
+	--shadow-card: 5px 7px 58px 0 rgba(31, 31, 31, 0.12);
+	--shadow-card-light: 5px 7px 58px 0 rgba(31, 31, 31, 0.08);
+	--shadow-orange-glow: 1px 1px 9px 0 rgba(242, 103, 0, 0.36);
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
-  font-size: 14px;
-  color: var(--color-gray-900);
-  background-color: var(--color-gray-40);
+	font-family: "Montserrat", sans-serif;
+	font-size: 14px;
+	color: var(--color-gray-900);
+	background-color: var(--color-gray-40);
 }

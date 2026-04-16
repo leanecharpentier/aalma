@@ -32,10 +32,12 @@ function StatRow({
   description: string;
 }) {
   return (
-    <div className="flex items-center gap-6 py-14 px-6 lg:px-12">
-      <p className="text-5xl lg:text-6xl font-bold shrink-0">{value}</p>
-      <div className="w-px h-16 bg-white" />
-      <p className="text-lg leading-relaxed opacity-80 max-w-md">
+    <div className="flex items-center justify-center gap-6 py-14 px-6 lg:px-12">
+      <p className="text-[56px] lg:text-[72px] font-bold text-primary-50 leading-none shrink-0 text-right w-[180px]">
+        {value}
+      </p>
+      <div className="w-px h-[84px] bg-primary-50 shrink-0" />
+      <p className="text-lg font-bold text-primary-50 leading-snug max-w-[415px]">
         {description}
       </p>
     </div>
@@ -58,30 +60,24 @@ export function Impact() {
       </div>
 
       {/* Orange stats (first 2) */}
-      <div className="bg-primary-500 text-white pt-6">
-        <div className="max-w-3xl mx-auto">
-          {orangeStats.slice(0, 2).map((stat) => (
-            <StatRow key={stat.value} {...stat} />
-          ))}
-        </div>
+      <div className="bg-primary-500 pt-6">
+        {orangeStats.slice(0, 2).map((stat) => (
+          <StatRow key={stat.value} {...stat} />
+        ))}
       </div>
 
       {/* Dark stat */}
-      <div className="bg-gray-900 text-white">
-        <div className="max-w-3xl mx-auto">
-          {darkStats.map((stat) => (
-            <StatRow key={stat.value} {...stat} />
-          ))}
-        </div>
+      <div className="bg-gray-900">
+        {darkStats.map((stat) => (
+          <StatRow key={stat.value} {...stat} />
+        ))}
       </div>
 
       {/* Last orange stat */}
-      <div className="bg-primary-500 text-white pb-6">
-        <div className="max-w-3xl mx-auto">
-          {orangeStats.slice(2).map((stat) => (
-            <StatRow key={stat.value} {...stat} />
-          ))}
-        </div>
+      <div className="bg-primary-500 pb-6">
+        {orangeStats.slice(2).map((stat) => (
+          <StatRow key={stat.value} {...stat} />
+        ))}
       </div>
     </section>
   );

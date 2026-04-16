@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/Button";
 
@@ -5,7 +6,7 @@ const tags = ["IA", "Plan d'action", "Impact mesurable"];
 
 export function Hero() {
   return (
-    <section className="relative w-full min-h-screen overflow-hidden px-6 lg:px-12 py-16 lg:py-24 flex items-center">
+    <section className="relative w-full min-h-[90vh] overflow-hidden px-6 lg:px-12 py-16 flex items-center">
       <div className="w-full flex flex-col lg:flex-row items-center gap-12">
         <div className="w-full lg:w-1/2 z-10">
           <div className="flex items-center gap-2 mb-8">
@@ -25,10 +26,9 @@ export function Hero() {
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-6">
-            <span className="text-primary-500">Pilotez la santé mentale</span>
-            <br />
+            <span className="text-primary-500">Pilotez la santé mentale</span>{" "}
             <span className="text-foreground">
-              avec des plans d&apos;action et mesurables
+              avec des plans d&apos;action mesurables
             </span>
           </h1>
 
@@ -51,10 +51,17 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Decorative shapes */}
-        <div className="flex-1 relative h-170 hidden lg:block">
-          <div className="absolute top-18 left-0 w-64 h-72 rounded-3xl bg-linear-to-t from-primary-500 via-primary-400 to-primary-200" />
-          <div className="ml-auto w-[80%] h-full rounded-3xl bg-linear-to-b from-primary-500 via-primary-400 to-primary-200" />
+        <div className="flex-1 relative hidden lg:flex items-center justify-center">
+          <div className="relative w-full aspect-square">
+            <Image
+              src="/image-hero.png"
+              alt="Aperçu du tableau de bord Aalma"
+              fill
+              unoptimized
+              priority
+              className="object-contain"
+            />
+          </div>
         </div>
       </div>
     </section>

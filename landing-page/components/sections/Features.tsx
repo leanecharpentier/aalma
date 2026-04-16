@@ -1,4 +1,5 @@
-import { ArrowRight, ChevronRight, User } from "lucide-react";
+import { ChevronRight, TrendingUp, User } from "lucide-react";
+import Image from "next/image";
 
 const features = [
   {
@@ -7,7 +8,7 @@ const features = [
       "Aalma vous permet de mieux comprendre le ressenti de vos équipes et de mettre en place des actions adaptées, utiles et mesurables dans le temps",
   },
   {
-    title: "Collaboration",
+    title: "Collaboration 360°",
     description:
       "Collaboration : Aalma unit les forces de la direction et du terrain dans un projet commun : faire de la cohésion d'équipe le moteur d'une entreprise en meilleure santé",
   },
@@ -24,18 +25,24 @@ export function Features() {
       id="plateforme"
       className="w-full bg-primary-500 relative overflow-hidden py-20 px-6 lg:px-12"
     >
-      {/* Decorative circles */}
-      <div className="absolute -right-32 top-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-primary-300/30 to-primary-400/20" />
-      <div className="absolute -right-16 top-1/3 w-[400px] h-[400px] rounded-full border border-white/10" />
+      {/* Decorative shape */}
+      <Image
+        src="/Subtract.png"
+        alt=""
+        width={200}
+        height={200}
+        className="absolute right-0 top-1/2 -translate-y-1/2 w-auto h-[90%] pointer-events-none"
+      />
 
       <div className="max-w-7xl mx-auto relative z-10 lg:w-3/5">
-        <h2 className="text-3xl lg:text-4xl font-bold text-white text-center mb-4">
+        <h2 className="text-3xl lg:text-4xl font-bold text-primary-30 text-center mb-6">
           Comprenez, mesurez, agissez
         </h2>
-        <p className="text-white/80 text-center text-sm max-w-lg mx-auto mb-12">
-          Aalma vous permet de mieux comprendre le ressenti de vos équipes et de
-          mettre en place des actions adaptées, utiles et mesurables dans le
-          temps
+        <p className="text-primary-30 text-center text-lg max-w-2xl mx-auto mb-12">
+          Aalma vous permet de mieux comprendre le ressenti de vos équipes
+          <br />
+          et de mettre en place des actions adaptées, utiles et mesurables dans
+          le temps
         </p>
 
         <div className="grid md:grid-cols-2 gap-3 mx-auto">
@@ -48,7 +55,11 @@ export function Features() {
                   : "bg-primary-200/10"
               }`}
             >
-              <User size={28} className="text-white mb-4" />
+              {i === 0 ? (
+                <TrendingUp size={28} className="text-white mb-4" />
+              ) : (
+                <User size={28} className="text-white mb-4" />
+              )}
               <h3 className="text-xl font-bold text-white mb-3">
                 {feature.title}
               </h3>

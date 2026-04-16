@@ -10,5 +10,5 @@ export type Team = {
 
 export async function fetchTeams(companyId?: number): Promise<Team[]> {
   const params = companyId ? `?companyId=${companyId}` : "";
-  return apiFetch<Team[]>(`/api/team${params}`);
+  return apiFetch<Team[]>(`/team${params}`);
 }
