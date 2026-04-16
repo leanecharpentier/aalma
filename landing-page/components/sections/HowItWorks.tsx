@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/Button";
 
@@ -7,18 +8,21 @@ const steps = [
     title: "Collectez les données",
     description:
       "Recueillez des retours anonymes et des signaux terrain pour mieux comprendre le ressenti réel d evos équipes",
+    image: "/how-it-work-pic-1.png",
   },
   {
     number: "02",
     title: "Analysez les données",
     description:
       "Transformez ces données e indicateurs clairs, comparables et exploitables",
+    image: "/how-it-work-pic-2.png",
   },
   {
     number: "03",
     title: "Agissez",
     description:
       "Déployez des plans concrets et suivez leur impact dans le temps",
+    image: "/how-it-work-pic-3.png",
   },
 ];
 
@@ -54,9 +58,15 @@ export function HowItWorks() {
                 </div>
               </div>
 
-              {/* Image placeholder */}
               <div className="flex-1 w-full">
-                <div className="w-full h-48 lg:h-56 rounded-2xl bg-linear-to-t from-primary-200 via-primary-500 to-primary-500 shadow-lg" />
+                <Image
+                  src={step.image}
+                  alt={step.title}
+                  width={500}
+                  height={300}
+                  unoptimized
+                  className="w-full h-auto rounded-3xl shadow-lg"
+                />
               </div>
             </div>
           ))}

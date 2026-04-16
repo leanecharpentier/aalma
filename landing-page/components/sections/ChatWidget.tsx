@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function ChatWidget() {
   return (
-    <div className="fixed w-fit bottom-8 right-8 bg-white rounded-2xl shadow-lg px-4 py-3 flex items-center gap-3 z-50">
+    <div className="fixed w-fit bottom-8 right-8 bg-white rounded-2xl shadow-cardOrange px-4 py-3 flex items-center gap-3 z-50">
       <Image
         src="/halo-aalma.png"
         alt="Aalma"

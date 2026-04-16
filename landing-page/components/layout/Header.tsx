@@ -7,7 +7,7 @@ const navLinks = [
   { label: "Plateforme", href: "#plateforme" },
   { label: "Fonctionnement", href: "#fonctionnement" },
   { label: "Impact", href: "#impact" },
-  { label: "Equipe", href: "#equipe" },
+  { label: "Équipe", href: "#equipe" },
 ];
 
 export function Header() {

@@ -26,20 +26,22 @@ export function Roles() {
           pour piloter et agir à tous les niveaux
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-2 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-3 max-w-6xl mx-auto">
           {roles.map((role) => (
             <div
               key={role.title}
-              className="bg-linear-to-t from-primary-50 to-primary-40 border border-primary-100 rounded-2xl p-6 flex flex-col justify-between min-h-[260px] shadow-card"
+              className="bg-linear-to-t from-primary-50 to-primary-40 border border-primary-200 rounded-3xl flex flex-col justify-between min-h-[362px] shadow-card overflow-hidden"
             >
-              <h3 className="text-3xl font-bold text-primary-500">
-                {role.title}
-              </h3>
-              <div>
-                <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">
-                  Role
+              <div className="px-6 py-3">
+                <h3 className="text-5xl font-bold text-primary-500">
+                  {role.title}
+                </h3>
+              </div>
+              <div className="flex flex-col gap-2 p-6">
+                <p className="text-xs text-gray-500 uppercase tracking-wider">
+                  RÔLE
                 </p>
-                <p className="text-sm text-foreground leading-relaxed">
+                <p className="text-lg text-gray-800 leading-snug">
                   {role.description}
                 </p>
               </div>
