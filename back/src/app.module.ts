@@ -16,7 +16,8 @@ import { RoleModule } from "./role/role.module";
 import { TeamModule } from "./team/team.module";
 import { UserModule } from "./user/user.module";
 import { ActionModule } from "./action/action.module";
-import { CategoryModule } from './category/category.module';
+import { CategoryModule } from "./category/category.module";
+import { KpiModule } from "./kpi/kpi.module";
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { CategoryModule } from './category/category.module';
     NotificationModule,
     ActionModule,
     CategoryModule,
+    KpiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -26,8 +26,8 @@ export const auth = betterAuth({
   advanced: {
     redirectURI: process.env.APP_URL || "http://localhost:3000",
     defaultCookieAttributes: {
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none", // doesn't work with http
+      secure: true,
     },
   },
   user: {
