@@ -37,7 +37,7 @@ export function Team() {
           </p>
           <p className="text-white/50 text-xs leading-relaxed">
             Léane Charpentier - Hugo Couturier - Mahora Grolleau -<br />
-            Marine Bruneau - Rebecca Ahiale Lieben - Zoe Pineau
+            Marine Bruneau - Rebecca Ahiale Lieben - Zoé Pineau
           </p>
         </div>
       </div>

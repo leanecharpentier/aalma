@@ -11,7 +11,7 @@ export function CTA() {
             {Array.from({ length: 9 }).map((_, i) => (
               <div
                 key={i}
-                className="w-40 h-40 rounded-full border border-white/70 shadow-[inset_0_4px_16px_rgba(180,80,0,0.5)]"
+                className="w-full h-auto aspect-square rounded-full border border-white/70 shadow-[inset_-20px_-20px_30px_rgba(200,100,30,0.7),inset_20px_20px_30px_rgba(200,100,30,0.7),-10px_-10px_20px_rgba(255,200,140,0.35),10px_10px_20px_rgba(255,200,140,0.35)]"
               />
             ))}
           </div>

@@ -34,6 +34,7 @@
   --color-green-500: #4BD426;
 
   --shadow-card: 5px 7px 58px 0 rgba(31, 31, 31, 0.12);
+  --shadow-cardOrange: 1px 1px 9px rgba(242, 103, 0, 0.36);
 }
 
 body {
