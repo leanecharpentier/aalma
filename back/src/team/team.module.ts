@@ -8,5 +8,6 @@ import { ActivityLogModule } from "src/activity-log/activity-log.module";
   imports: [AuthGuardModule, ActivityLogModule],
   controllers: [TeamController],
   providers: [TeamService],
+  exports: [TeamService],
 })
 export class TeamModule {}

@@ -14,26 +14,28 @@ export class AalmaScore extends Kpi {
 
     // Calcul stress
     const stressKpi = factory.create("stress");
-    const stressResult =
-      100 -
-      ((await stressKpi?.getCalcul(startDate, endDate, companyId, teamId)) ??
-        0);
+    let calcul = await stressKpi?.getCalcul(
+      startDate,
+      endDate,
+      companyId,
+      teamId,
+    );
+    const stressResult = calcul ? 100 - calcul : 0;
 
     // Calcul Work Load
     const loadKpi = factory.create("workload");
-    const loadResult =
-      100 -
-      ((await loadKpi?.getCalcul(startDate, endDate, companyId, teamId)) ?? 0);
+    calcul = await loadKpi?.getCalcul(startDate, endDate, companyId, teamId);
+    const loadResult = calcul ? 100 - calcul : 0;
 
     // Calcul recognition
     const recognitionKpi = factory.create("recognition");
-    const recognitionResult =
-      (await recognitionKpi?.getCalcul(
-        startDate,
-        endDate,
-        companyId,
-        teamId,
-      )) ?? 0;
+    calcul = await recognitionKpi?.getCalcul(
+      startDate,
+      endDate,
+      companyId,
+      teamId,
+    );
+    const recognitionResult = calcul ? 100 - calcul : 0;
 
     // Calcul team spirit
     const teamSpiritKpi = factory.create("teamspirit");
@@ -49,11 +51,8 @@ export class AalmaScore extends Kpi {
 
     // Calcul Work/Life Balance
     const balanceKpi = factory.create("workbalance");
-    const balanceResult =
-      100 -
-      ((await balanceKpi?.getCalcul(startDate, endDate, companyId, teamId)) ??
-        0);
-
+    calcul = await balanceKpi?.getCalcul(startDate, endDate, companyId, teamId);
+    const balanceResult = calcul ? 100 - calcul : 0;
     return (
       (stressResult +
         loadResult +
@@ -63,5 +62,56 @@ export class AalmaScore extends Kpi {
         balanceResult) /
       6
     );
+  }
+
+  public async getEvolution(
+    startDate: Date,
+    endDate: Date,
+    companyId: string,
+    teamId?: string,
+    previousStartDate?: Date,
+    previousEndDate?: Date,
+  ): Promise<number> {
+    const current_score = await this.getCalcul(
+      startDate,
+      endDate,
+      companyId,
+      teamId,
+    );
+    const periodDuration =
+      (endDate.getFullYear() - startDate.getFullYear()) * 12 -
+      startDate.getMonth() +
+      endDate.getMonth();
+    const periodDurationInYear = Math.floor(periodDuration / 12);
+    const periodDurationInMonth: number = (periodDuration % 12) + 1;
+
+    const prevEnd =
+      previousEndDate ??
+      (() => {
+        endDate = new Date(startDate);
+        endDate.setDate(endDate.getDate() - 1);
+        return endDate;
+      })();
+
+    const prevStart =
+      previousStartDate ??
+      (() => {
+        startDate.setMonth(startDate.getMonth() - periodDurationInMonth);
+        startDate.setFullYear(startDate.getFullYear() - periodDurationInYear);
+        return startDate;
+      })();
+
+    const previous_score = await this.getCalcul(
+      prevStart,
+      prevEnd,
+      companyId,
+      teamId,
+    );
+
+    if (previous_score === 0) {
+      return 0;
+    }
+
+    return current_score - previous_score;
   }
 }
