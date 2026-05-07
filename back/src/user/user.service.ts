@@ -214,9 +214,11 @@ export class UserService {
    * Get all users from the database.
    * @returns Promise<User[]>
    */
-  async findAll(): Promise<User[]> {
+  async findAll(session): Promise<User[]> {
     return await AppDataSource.getRepository(User)
       .createQueryBuilder("user")
+      .leftJoinAndSelect("user.team", "team")
+      .where('team.company_id = :companyId', { companyId: session.companyId })
       .getMany();
   }
 

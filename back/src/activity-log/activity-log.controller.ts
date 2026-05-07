@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Req, UseGuards } from "@nestjs/common";
 import { ActivityLogService } from "./activity-log.service";
 import { AuthGuard } from "src/auth/auth.guard";
 import { RolesGuard } from "src/role/roles.guards";
@@ -12,8 +12,9 @@ export class ActivityLogController {
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID])
-  findAll() {
-    return this.activityLogService.findAll();
+  findAll(@Req() req) {
+    const session = (req as any).session;
+    return this.activityLogService.findAll(session);
   }
 
   @Get(":id")

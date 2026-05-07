@@ -50,8 +50,9 @@ export class FormController {
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
-  async findAll() {
-    return await this.formService.findAll();
+  async findAll(@Req() req) {
+    const session = (req as any).session;
+    return await this.formService.findAll(session);
   }
 
   @Get("current")

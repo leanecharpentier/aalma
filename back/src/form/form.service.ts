@@ -63,9 +63,10 @@ export class FormService {
     }
   }
 
-  async findAll() {
+  async findAll(session) {
     return await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
+      .where('form.company_id = :companyId', { companyId: session.companyId })
       .getMany();
   }
 

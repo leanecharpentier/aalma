@@ -8,6 +8,9 @@ export class Session {
   @Column('date', { name: 'expiresAt' })
   expiresAt!: Date;
 
+  @Column({ name: "company_id", nullable: true, type:'uuid' })
+  companyId: string;
+
   @Column('text', { name: 'token', unique: true })
   token!: string;
 
