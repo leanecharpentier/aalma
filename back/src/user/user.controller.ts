@@ -70,6 +70,13 @@ export class UserController {
     return this.userService.findAll();
   }
 
+    @Get("me")
+    @UseGuards(AuthGuard)
+    async me(@Req() req){
+      const user = (req as any).user;
+      return await this.userService.findOne(user.id);
+    }
+
   @Get(":id")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
