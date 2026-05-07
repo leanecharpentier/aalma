@@ -228,6 +228,8 @@ export class UserService {
   async findOne(id: string): Promise<User | null> {
     return await AppDataSource.getRepository(User)
       .createQueryBuilder("user")
+      .leftJoinAndSelect("user.role", "role")
+      .leftJoinAndSelect("user.team", "team")
       .where("user.id = :id", { id: id })
       .getOne();
   }
