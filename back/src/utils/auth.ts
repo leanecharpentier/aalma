@@ -22,6 +22,14 @@ export const auth = betterAuth({
       redirectURI: `${process.env.APP_URL}/auth/callback/microsoft`,
     },
   },
+  session: {
+    additionalFields: {
+      companyId: {
+        type: "string",
+        required: false,
+      },
+    },
+  },
   oneTap: undefined,
   advanced: {
     redirectURI: process.env.APP_URL || "http://localhost:3000",

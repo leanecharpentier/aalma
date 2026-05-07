@@ -66,8 +66,9 @@ export class UserController {
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([SUPER_ADMIN_ROLE_ID, ADMIN_ROLE_ID, HR_ROLE_ID])
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Req() req) {
+    const session = (req as any).session;
+    return this.userService.findAll(session);
   }
 
   @Get(":id")

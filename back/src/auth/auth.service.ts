@@ -5,8 +5,11 @@ import {
   Req,
   Res,
 } from "@nestjs/common";
+import { AppDataSource } from "DataSource";
 import { CompanyService } from "src/company/company.service";
 import { auth } from "src/utils/auth";
+import { Session } from "typeorm/entities/Session";
+import { User } from "typeorm/entities/User";
 
 @Injectable()
 export class AuthService {
@@ -18,7 +21,7 @@ export class AuthService {
    * @returns Résultat de la tentative de connexion
    */
   async signIn(email: string, password: string) {
-    return await auth.api.signInEmail({
+    const result =  await auth.api.signInEmail({
       body: {
         email,
         password,
@@ -26,7 +29,47 @@ export class AuthService {
       },
       asResponse: true,
     });
+  if (!result.ok) return result;
+
+  const sessionToken = this.extractSessionToken(result.headers);
+
+  if (sessionToken) {
+    const session = await auth.api.getSession({
+      headers: new Headers({ cookie: `better-auth.session_token=${sessionToken}` }),
+    });if (session?.user?.id) {
+      const companyId = await this.findCompanyIdForUser(session.user.id);
+      
+      if (companyId && session.session?.id) {
+        await this.updateSessionCompanyId(session.session.id, companyId);
+      }
+    }
   }
+  return result;
+}
+
+  private extractSessionToken(headers: Headers): string | null {
+  const setCookie = headers.get("set-cookie");
+  if (!setCookie) return null;
+  const match = setCookie.match(/better-auth\.session_token=([^;]+)/);
+  return match ? match[1] : null;
+}
+
+  private async findCompanyIdForUser(userId: string): Promise<string | null> {
+  const user = await AppDataSource.getRepository(User)
+        .createQueryBuilder("user")
+        .where("user.id = :id", { id:userId })
+        .getOne(); 
+  return user?.getCompanyId() ?? null;
+}
+
+private async updateSessionCompanyId(sessionId: string, companyId: string) {
+  return await AppDataSource.getRepository(Session)
+        .createQueryBuilder("session")
+        .update()
+        .set({companyId})
+        .where("session.id = :id", { id: sessionId })
+        .execute();
+}
 
   /**
    * Inscrit un nouvel utilisateur avec nom, email et mot de passe.

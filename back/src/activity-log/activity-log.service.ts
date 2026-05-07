@@ -24,14 +24,16 @@ export class ActivityLogService {
       .getOne();
   }
 
-  async findAll() {
-    return await AppDataSource.getRepository(ActivityLog)
-      .createQueryBuilder("activity_log")
-      .leftJoinAndSelect("activity_log.user", "user")
-      .leftJoinAndSelect("user.role", "role")
-      .orderBy("activity_log.createdAt", "DESC")
-      .getMany();
-  }
+  async findAll(session) {
+  return await AppDataSource.getRepository(ActivityLog)
+    .createQueryBuilder("activity_log")
+    .leftJoinAndSelect("activity_log.user", "user")
+    .leftJoinAndSelect("user.role", "role")
+    .leftJoinAndSelect("user.team", "team")
+    .where('team.company_id = :companyId', { companyId: session.companyId })
+    .orderBy("activity_log.createdAt", "DESC")
+    .getMany();
+}
 
   async findOne(id: string): Promise<ActivityLog | null> {
     return await AppDataSource.getRepository(ActivityLog)
