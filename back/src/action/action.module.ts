@@ -7,5 +7,7 @@ import { ActivityLogModule } from "src/activity-log/activity-log.module";
   controllers: [ActionController],
   providers: [ActionService],
   imports: [ActivityLogModule],
+  exports: [ActionService],
+  
 })
 export class ActionModule {}

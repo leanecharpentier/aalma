@@ -3,10 +3,12 @@ import { KpiFactory } from "./classes/kpifactory";
 import { TeamService } from "src/team/team.service";
 import { AalmaScore } from "./classes/aalmascore";
 import { Team } from "typeorm/entities/Team";
+import { Action } from "typeorm/entities/Action";
+import { ActionService } from "src/action/action.service";
 
 @Injectable()
 export class KpiService {
-  constructor(private teamService: TeamService) {}
+  constructor(private teamService: TeamService, protected actionService:ActionService) {}
   types = [
     "workload",
     "stress",
@@ -38,6 +40,30 @@ export class KpiService {
     );
     return scores;
   }
+  
+  async recommandedActions(
+    factory: KpiFactory,
+    startDate: Date,
+    endDate: Date,
+    companyId: string,
+    teamId?: string,
+  ): Promise<Action[]> {
+    const actions: Action[] = [];
+    await Promise.all(
+      this.types.map(async (type) => {
+        const kpi = factory.create(type);
+        if (kpi) {
+          actions.push(...await kpi.getRecommandedActions(
+            startDate,
+            endDate,
+            companyId,
+            teamId ?? undefined,
+          ));
+        }
+      }),
+    );
+    return actions;
+  }
 
   async worstTeam(
     startDate: Date,
@@ -45,7 +71,7 @@ export class KpiService {
     companyId: string,
   ): Promise<{ team: Team; score: number }[]> {
     const teams = await this.teamService.findAll({ company_id: companyId });
-    const score = new AalmaScore();
+    const score = new AalmaScore(this.actionService);
     const worst_team: { team: Team; score: number }[] = [];
     await Promise.all(
       teams.map(async (team) => {

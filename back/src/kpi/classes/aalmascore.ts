@@ -1,7 +1,11 @@
+import { ActionService } from "src/action/action.service";
 import { Kpi } from "./kpi";
 import { KpiFactory } from "./kpifactory";
 
 export class AalmaScore extends Kpi {
+  constructor(actionService: ActionService) {
+    super(actionService);
+  }
   protected questionsIds = [];
 
   public async getCalcul(
@@ -10,7 +14,7 @@ export class AalmaScore extends Kpi {
     companyId: string,
     teamId?: string,
   ): Promise<number> {
-    const factory = new KpiFactory();
+  const factory = new KpiFactory(this.actionService); 
 
     // Calcul stress
     const stressKpi = factory.create("stress");
@@ -63,55 +67,8 @@ export class AalmaScore extends Kpi {
       6
     );
   }
-
-  public async getEvolution(
-    startDate: Date,
-    endDate: Date,
-    companyId: string,
-    teamId?: string,
-    previousStartDate?: Date,
-    previousEndDate?: Date,
-  ): Promise<number> {
-    const current_score = await this.getCalcul(
-      startDate,
-      endDate,
-      companyId,
-      teamId,
-    );
-    const periodDuration =
-      (endDate.getFullYear() - startDate.getFullYear()) * 12 -
-      startDate.getMonth() +
-      endDate.getMonth();
-    const periodDurationInYear = Math.floor(periodDuration / 12);
-    const periodDurationInMonth: number = (periodDuration % 12) + 1;
-
-    const prevEnd =
-      previousEndDate ??
-      (() => {
-        endDate = new Date(startDate);
-        endDate.setDate(endDate.getDate() - 1);
-        return endDate;
-      })();
-
-    const prevStart =
-      previousStartDate ??
-      (() => {
-        startDate.setMonth(startDate.getMonth() - periodDurationInMonth);
-        startDate.setFullYear(startDate.getFullYear() - periodDurationInYear);
-        return startDate;
-      })();
-
-    const previous_score = await this.getCalcul(
-      prevStart,
-      prevEnd,
-      companyId,
-      teamId,
-    );
-
-    if (previous_score === 0) {
-      return 0;
-    }
-
-    return current_score - previous_score;
+  
+  protected async isOverLimit(startDate: Date, endDate: Date, companyId: string, teamId?: string): Promise<boolean> {
+      return await this.getCalcul(startDate, endDate, companyId, teamId)<70;
   }
 }

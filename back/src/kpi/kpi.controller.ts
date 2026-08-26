@@ -22,11 +22,13 @@ import {
   MANAGER_ROLE_ID,
   SUPER_ADMIN_ROLE_ID,
 } from "typeorm/entities/Role";
+import { KpiRecommandedActionsDto } from "./dto/kpi.recommanded-actions";
+import { ActionService } from "src/action/action.service";
 
 @Controller("kpi")
 @ApiTags("KPI")
 export class KpiController {
-  constructor(private readonly kpiService: KpiService) {}
+  constructor(private readonly kpiService: KpiService, protected actionService:ActionService) {}
   @Post("detail/:kpiType")
   @UseGuards(AuthGuard, RolesGuard)
   @Roles([
@@ -65,7 +67,8 @@ export class KpiController {
       teamId?: string;
     },
   ) {
-    const factory = new KpiFactory();
+      const factory = new KpiFactory(this.actionService); 
+
     const kpi = factory.create(kpiType);
     if (kpi) {
       return `${await kpi.getCalcul(
@@ -117,8 +120,8 @@ export class KpiController {
       kpis: {},
       evolution_score: 0,
     };
-    const factory = new KpiFactory();
-    const score = new AalmaScore();
+    const factory = new KpiFactory(this.actionService);
+    const score = factory.create("aalma");
 
     // Aalma Score
     response.aalma_score = await score?.getCalcul(
@@ -148,6 +151,52 @@ export class KpiController {
 
     // Aora score diff previous period
     response.evolution_score = await score?.getEvolution(
+      body.startDate,
+      body.endDate,
+      body.companyId,
+      body.teamId ?? undefined,
+    );
+    return response;
+  }
+  
+  @Post("recommanded-actions")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([
+    SUPER_ADMIN_ROLE_ID,
+    ADMIN_ROLE_ID,
+    HR_ROLE_ID,
+    MANAGER_ROLE_ID,
+    CEO_ROLE_ID,
+  ])
+  @ApiOperation({
+    summary: "Actions recommandées",
+    description:
+      "Calcule l'ensemble des KPIs, regarde si elles sont au-dessus du seuil de danger. Si oui, liste les actions recommandées",
+  })
+  @ApiBody({ type: KpiDetailBodyDto })
+  @ApiResponse({
+    status: 200,
+    description: "Actions recommandées",
+    type: KpiRecommandedActionsDto,
+  })
+  async recommandedActions(
+    @Body() body: {
+      startDate: Date;
+      endDate: Date;
+      companyId: string;
+      teamId?: string;
+    },
+  ) {
+    body.startDate = new Date(body.startDate);
+    body.endDate = new Date(body.endDate);
+    const response: KpiRecommandedActionsDto = {
+      actions: []
+    };
+    const factory = new KpiFactory(this.actionService);
+
+    //All KPIs in name=>value
+    response.actions = await this.kpiService.recommandedActions(
+      factory,
       body.startDate,
       body.endDate,
       body.companyId,

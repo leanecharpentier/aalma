@@ -55,7 +55,7 @@ export class ActionService {
     return await query.orderBy("category.id").getMany();
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Action | null> {
     return await AppDataSource.getRepository(Action)
       .createQueryBuilder("action")
       .leftJoinAndSelect("action.category", "category")
