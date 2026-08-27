@@ -6,53 +6,61 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Category } from "./Category";
+import { Company } from "./Company";
+import { Speaker } from "./Speaker";
+import { Format } from "./Format";
 
-@Entity("action")
+@Entity("available_action")
 export class Action {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
-  name: string;
-
-  @Column("text", { name: "category_id" })
+  @Column("uuid", { name: "category_id" })
   category_id: string;
 
   @ManyToOne(() => Category)
   @JoinColumn({ name: "category_id" })
   category?: Category;
 
+  @Column("uuid", { name: "format_id" })
+  format_id: string;
+
+  @ManyToOne(() => Format)
+  @JoinColumn({ name: "format_id" })
+  format?: Format;
+
+  @Column("uuid", { name: "company_id" })
+  company_id: string;
+
+  @ManyToOne(() => Company)
+  @JoinColumn({ name: "company_id" })
+  company?: Company;
+
+  @Column("uuid", { name: "speaker_id" })
+  speaker_id: string;
+
+  @ManyToOne(() => Speaker)
+  @JoinColumn({ name: "speaker_id" })
+  speaker?: Speaker;
+
+  @Column("int")
+  duration: number;
+
+  @Column("int")
+  nb_attendees: number;
+
+  @Column("varchar", { length: 50 })
+  title: string;
+
+  @Column("varchar", { length: 50 })
+  price: string;
+
   @Column("text")
   description: string;
 
   @Column("text")
-  schedule: string;
+  planification: string;
 
-  @Column("int")
-  ideal_group_low: number;
-
-  @Column("int")
-  ideal_group_high: number;
-
-  @Column("int")
-  duration_in_minute: number;
-
-  @Column("bool")
-  in_person: boolean;
-
-  @Column("int", { nullable: true })
-  price: number;
-
-  @Column("int", { nullable: true })
-  note: number;
-
-  @Column("int")
-  reservation: number;
-
-  @Column("bool")
-  system: boolean;
+  @Column("json")
+  keywords: string[];
 }
-
-export const RESERVATION_NEEDED = 1;
-export const RESERVATION_POSSIBLE = 2;
-export const RESERVATION_UNAVAILABLE = 3;

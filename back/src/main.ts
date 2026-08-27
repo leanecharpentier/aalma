@@ -3,7 +3,9 @@ import { AppModule } from "./app.module";
 import "reflect-metadata";
 import { AppDataSource } from "../DataSource";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { ValidationPipe } from "@nestjs/common";
 const cookieParser = require("cookie-parser");
+
 
 async function bootstrap() {
   await AppDataSource.initialize();
@@ -17,6 +19,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, documentFactory);
   app.setGlobalPrefix("api");
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.use(cookieParser());
   app.enableCors({
     origin: process.env.CORS_ORIGIN ?? "http://localhost:3001",

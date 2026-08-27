@@ -17,10 +17,7 @@ export class ActionService {
       const result = await AppDataSource.getRepository(Action)
         .createQueryBuilder("action")
         .insert()
-        .values({
-          ...createActionDto,
-          system: connectedUser.role?.name === SUPER_ADMIN_ROLE_ID,
-        })
+        .values(createActionDto)
         .execute();
       return result;
     } catch (e) {
@@ -34,24 +31,29 @@ export class ActionService {
     }
   }
 
-  async findAll(filters: object) {
+  async findAll(filters: Record<string, string>) {
+    const ALLOWED_FILTERS = ["category_id", "format_id", "company_id", "speaker_id"];
+
     const query = AppDataSource.getRepository(Action)
       .createQueryBuilder("action")
-      .leftJoinAndSelect("action.category", "category");
-    if (Object.keys(filters).length !== 0) {
-      Object.keys(filters).forEach((property) => {
-        if (property === "search") {
-          query.andWhere(
-            "action.name LIKE :search OR description LIKE :search",
-            {
-              search: `%${filters[property]}%`,
-            },
-          );
-        } else {
-          query.andWhere(`${property} = :value`, { value: filters[property] });
-        }
-      });
-    }
+      .leftJoinAndSelect("action.category", "category")
+      .leftJoinAndSelect("action.format", "format")
+      .leftJoinAndSelect("action.speaker", "speaker")
+      .leftJoinAndSelect("action.company", "company");
+
+    Object.keys(filters).forEach((property) => {
+      if (property === "search") {
+        query.andWhere(
+          "(action.title LIKE :search OR action.description LIKE :search)",
+          { search: `%${filters[property]}%` },
+        );
+      } else if (ALLOWED_FILTERS.includes(property)) {
+        query.andWhere(`action.${property} = :${property}`, {
+          [property]: filters[property],
+        });
+      }
+    });
+
     return await query.orderBy("category.id").getMany();
   }
 

@@ -63,7 +63,7 @@ export class ActionController {
     MANAGER_ROLE_ID,
     HEALTH_REFEREE_ROLE_ID,
   ])
-  async findAll(@Query() filters: object) {
+  async findAll(@Query() filters: Record<string, string>) {
     return await this.actionService.findAll(filters);
   }
 

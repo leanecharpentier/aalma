@@ -18,6 +18,8 @@ import { UserModule } from "./user/user.module";
 import { ActionModule } from "./action/action.module";
 import { CategoryModule } from "./category/category.module";
 import { KpiModule } from "./kpi/kpi.module";
+import { RoadmapModule } from "./roadmap/roadmap.module";
+import { BookedActionModule } from "./booked-action/booked-action.module";
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { KpiModule } from "./kpi/kpi.module";
     ActionModule,
     CategoryModule,
     KpiModule,
+    RoadmapModule,
+    BookedActionModule
   ],
   controllers: [AppController],
   providers: [AppService],
