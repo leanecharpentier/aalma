@@ -32,7 +32,9 @@ export class ActionService {
   }
 
   async findAll(filters: Record<string, string>) {
-    const ALLOWED_FILTERS = ["category_id", "format_id", "company_id", "speaker_id"];
+    const EXACT_FILTERS = ["category_id", "format_id", "company_id", "speaker_id"];
+    const TEXT_FILTERS = ["title", "price"];
+    const RANGE_FILTERS = ["duration", "nb_attendees"];
 
     const query = AppDataSource.getRepository(Action)
       .createQueryBuilder("action")
@@ -42,19 +44,44 @@ export class ActionService {
       .leftJoinAndSelect("action.company", "company");
 
     Object.keys(filters).forEach((property) => {
+      const value = filters[property];
+
       if (property === "search") {
         query.andWhere(
-          "(action.title LIKE :search OR action.description LIKE :search)",
-          { search: `%${filters[property]}%` },
+          "(action.title ILIKE :search OR action.description ILIKE :search)",
+          { search: `%${value}%` },
         );
-      } else if (ALLOWED_FILTERS.includes(property)) {
-        query.andWhere(`action.${property} = :${property}`, {
-          [property]: filters[property],
+      } else if (property === "keywords") {
+        query.andWhere("action.keywords::text ILIKE :keywords", {
+          keywords: `%${value}%`,
         });
+      } else if (EXACT_FILTERS.includes(property)) {
+        query.andWhere(`action.${property} = :${property}`, {
+          [property]: value,
+        });
+      } else if (TEXT_FILTERS.includes(property)) {
+        query.andWhere(`action.${property} ILIKE :${property}`, {
+          [property]: `%${value}%`,
+        });
+      } else {
+        const rangeMatch = RANGE_FILTERS.find(
+          (field) =>
+            property === `${field}_min` || property === `${field}_max`,
+        );
+
+        if (rangeMatch) {
+          const isMin = property.endsWith("_min");
+          const operator = isMin ? ">=" : "<=";
+          const paramName = property;
+
+          query.andWhere(`action.${rangeMatch} ${operator} :${paramName}`, {
+            [paramName]: Number(value),
+          });
+        }
       }
     });
 
-    return await query.orderBy("category.id").getMany();
+    return await query.getMany();
   }
 
   async findOne(id: string): Promise<Action | null> {
