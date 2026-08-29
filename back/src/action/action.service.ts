@@ -7,6 +7,7 @@ import { User } from "typeorm/entities/User";
 import { ActivityLogService } from "src/activity-log/activity-log.service";
 import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
 import { SUPER_ADMIN_ROLE_ID } from "typeorm/entities/Role";
+import { Review } from "typeorm/entities/Review";
 
 @Injectable()
 export class ActionService {
@@ -31,17 +32,32 @@ export class ActionService {
     }
   }
 
-  async findAll(filters: Record<string, string>) {
+  async findAll(filters: Record<string, string>, userId?: string) {
     const EXACT_FILTERS = ["category_id", "format_id", "company_id", "speaker_id"];
     const TEXT_FILTERS = ["title", "price"];
     const RANGE_FILTERS = ["duration", "nb_attendees"];
 
     const query = AppDataSource.getRepository(Action)
       .createQueryBuilder("action")
-      .leftJoinAndSelect("action.category", "category")
-      .leftJoinAndSelect("action.format", "format")
-      .leftJoinAndSelect("action.speaker", "speaker")
-      .leftJoinAndSelect("action.company", "company");
+      .leftJoin("action.category", "category")
+      .leftJoin("action.format", "format")
+      .select([
+        "action.id",
+        "action.title",
+        "action.description",
+        "action.duration",
+        "action.nb_attendees",
+        "category.id",
+        "category.name",
+        "format.id",
+        "format.name",
+      ]);
+
+    if (userId) {
+      query
+        .leftJoin("action.favorites", "favorite", "favorite.user_id = :userId", { userId })
+        .addSelect("favorite.user_id");
+    }
 
     Object.keys(filters).forEach((property) => {
       const value = filters[property];
@@ -81,15 +97,75 @@ export class ActionService {
       }
     });
 
-    return await query.getMany();
+    const actions = await query.getMany();
+
+    return actions.map((action) => ({
+      ...action,
+      isFavorite: userId ? !!(action as any).favorite : undefined,
+    }));
   }
 
-  async findOne(id: string): Promise<Action | null> {
+  async findOneRaw(id: string): Promise<Action | null> {
     return await AppDataSource.getRepository(Action)
       .createQueryBuilder("action")
-      .leftJoinAndSelect("action.category", "category")
       .where("action.id = :id", { id })
       .getOne();
+  }
+
+  async findOne(id: string, userId?: string) {
+    const query = AppDataSource.getRepository(Action)
+      .createQueryBuilder("action")
+      .leftJoin("action.category", "category")
+      .leftJoin("action.format", "format")
+      .leftJoin("action.speaker", "speaker")
+      .select([
+        "action.id",
+        "action.title",
+        "action.description",
+        "action.planification",
+        "action.duration",
+        "action.nb_attendees",
+        "action.price",
+        "category.id",
+        "category.name",
+        "format.id",
+        "format.name",
+        "speaker.id",
+        "speaker.first_name",
+        "speaker.last_name",
+        "speaker.job",
+        "speaker.email",
+        "speaker.phone",
+      ])
+      .where("action.id = :id", { id });
+
+    if (userId) {
+      query
+        .leftJoin("action.favorites", "favorite", "favorite.user_id = :userId", { userId })
+        .addSelect("favorite.user_id");
+    }
+
+    const action = await query.getOne();
+
+    if (!action) {
+      return null;
+    }
+
+    const ratingStats = await AppDataSource.getRepository(Review)
+      .createQueryBuilder("review")
+      .select("AVG(review.grade)", "average")
+      .addSelect("COUNT(review.id)", "count")
+      .where("review.available_action_id = :id", { id })
+      .getRawOne();
+
+    return {
+      ...action,
+      isFavorite: userId ? !!(action as any).favorite : undefined,
+      averageRating: ratingStats?.average
+        ? Number(parseFloat(ratingStats.average).toFixed(1))
+        : null,
+      reviewsCount: ratingStats?.count ? Number(ratingStats.count) : 0,
+    };
   }
 
   async update(

@@ -52,34 +52,36 @@ export class ActionController {
     }
     return result;
   }
+@Get()
+@UseGuards(AuthGuard, RolesGuard)
+@Roles([
+  SUPER_ADMIN_ROLE_ID,
+  ADMIN_ROLE_ID,
+  HR_ROLE_ID,
+  CEO_ROLE_ID,
+  MANAGER_ROLE_ID,
+  HEALTH_REFEREE_ROLE_ID,
+])
+async findAll(
+  @Query() filters: Record<string, string>,
+  @Req() req,
+) {
+  return await this.actionService.findAll(filters, req.user.id);
+}
 
-  @Get()
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles([
-    SUPER_ADMIN_ROLE_ID,
-    ADMIN_ROLE_ID,
-    HR_ROLE_ID,
-    CEO_ROLE_ID,
-    MANAGER_ROLE_ID,
-    HEALTH_REFEREE_ROLE_ID,
-  ])
-  async findAll(@Query() filters: Record<string, string>) {
-    return await this.actionService.findAll(filters);
-  }
-
-  @Get(":id")
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles([
-    SUPER_ADMIN_ROLE_ID,
-    ADMIN_ROLE_ID,
-    HR_ROLE_ID,
-    CEO_ROLE_ID,
-    MANAGER_ROLE_ID,
-    HEALTH_REFEREE_ROLE_ID,
-  ])
-  async findOne(@Param("id") id: string) {
-    return await this.actionService.findOne(id);
-  }
+@Get(":id")
+@UseGuards(AuthGuard, RolesGuard)
+@Roles([
+  SUPER_ADMIN_ROLE_ID,
+  ADMIN_ROLE_ID,
+  HR_ROLE_ID,
+  CEO_ROLE_ID,
+  MANAGER_ROLE_ID,
+  HEALTH_REFEREE_ROLE_ID,
+])
+async findOne(@Param("id") id: string, @Req() req) {
+  return await this.actionService.findOne(id, req.user.id);
+}
 
   @Patch(":id")
   @UseGuards(AuthGuard, RolesGuard)

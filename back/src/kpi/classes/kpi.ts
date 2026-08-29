@@ -55,7 +55,7 @@ constructor(protected actionService: ActionService) {}
   ):Promise<Action[]> {
     if (await this.isOverLimit(startDate, endDate, companyId, teamId)) {
       const actions = await Promise.all(
-        this.actionsIds.map((id) => this.actionService.findOne(id))
+        this.actionsIds.map((id) => this.actionService.findOneRaw(id))
       );
       return actions.filter((a): a is Action => a !== null);
     }
