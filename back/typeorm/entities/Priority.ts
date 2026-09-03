@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { Roadmap } from "./Rodmap";
 
 @Entity("priority")
@@ -6,13 +6,13 @@ export class Priority {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column("uuid", { name: "roadmap_id" })
+  @Column({ name: "roadmap_id" })
   roadmap_id: string;
 
   @ManyToOne(() => Roadmap)
   @JoinColumn({ name: "roadmap_id" })
-  roadmap?: Roadmap;
+  roadmap: Roadmap;
 
-  @Column()
-  name: string;
+  @Column({ type: "varchar" })
+  memo: string;
 }

@@ -20,6 +20,7 @@ import { CategoryModule } from "./category/category.module";
 import { KpiModule } from "./kpi/kpi.module";
 import { RoadmapModule } from "./roadmap/roadmap.module";
 import { BookedActionModule } from "./booked-action/booked-action.module";
+import { PriorityModule } from "./priority/priority.module";
 
 @Module({
   imports: [
@@ -41,7 +42,8 @@ import { BookedActionModule } from "./booked-action/booked-action.module";
     CategoryModule,
     KpiModule,
     RoadmapModule,
-    BookedActionModule
+    BookedActionModule,
+    PriorityModule
   ],
   controllers: [AppController],
   providers: [AppService],

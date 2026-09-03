@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { Team } from "./Team";
 
 @Entity("roadmap")
@@ -6,10 +6,10 @@ export class Roadmap {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column("uuid", { name: "team_id" })
-  team_id: string;
+  @Column({ name: "team_id", nullable: true })
+  team_id: string | null;
 
-  @ManyToOne(() => Team)
+  @ManyToOne(() => Team, { nullable: true })
   @JoinColumn({ name: "team_id" })
-  team?: Team;
+  team: Team | null;
 }
