@@ -15,7 +15,12 @@ import { QuestionModule } from "./question/question.module";
 import { RoleModule } from "./role/role.module";
 import { TeamModule } from "./team/team.module";
 import { UserModule } from "./user/user.module";
-import { KpiModule } from './kpi/kpi.module';
+import { ActionModule } from "./action/action.module";
+import { CategoryModule } from "./category/category.module";
+import { KpiModule } from "./kpi/kpi.module";
+import { RoadmapModule } from "./roadmap/roadmap.module";
+import { BookedActionModule } from "./booked-action/booked-action.module";
+import { PriorityModule } from "./priority/priority.module";
 
 @Module({
   imports: [
@@ -33,7 +38,12 @@ import { KpiModule } from './kpi/kpi.module';
     FormModule,
     AnswerModule,
     NotificationModule,
+    ActionModule,
+    CategoryModule,
     KpiModule,
+    RoadmapModule,
+    BookedActionModule,
+    PriorityModule
   ],
   controllers: [AppController],
   providers: [AppService],

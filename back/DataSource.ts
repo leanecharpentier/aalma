@@ -8,5 +8,5 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   synchronize: false,
   entities: [path.resolve(__dirname, "typeorm/entities/**/*.{ts,js}")],
-  migrations: [path.resolve(__dirname, "typeorm/migrations/**/*.ts")],
+  migrations: [path.resolve(__dirname, "typeorm/migrations/*.{ts,js}")],
 });

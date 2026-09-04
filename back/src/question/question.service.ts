@@ -16,6 +16,12 @@ export class QuestionService {
     private readonly propositionService: PropositionService,
   ) {}
 
+  /**
+   * Crée une nouvelle question avec ses propositions associées.
+   * @param createQuestionDto Données de la question à créer
+   * @param connectedUser Utilisateur actuellement connecté
+   * @returns Résultat de la création de la question
+   */
   async create(createQuestionDto: CreateQuestionDto, connectedUser: User) {
     try {
       const existingQuestion = await AppDataSource.getRepository(Question)
@@ -61,12 +67,21 @@ export class QuestionService {
     }
   }
 
+  /**
+   * Récupère toutes les questions.
+   * @returns Liste des questions
+   */
   async findAll() {
     return await AppDataSource.getRepository(Question)
       .createQueryBuilder("question")
       .getMany();
   }
 
+  /**
+   * Récupère une question avec ses propositions associées.
+   * @param id Identifiant de la question
+   * @returns Question correspondante avec ses propositions
+   */
   async findOne(id: string) {
     return await AppDataSource.getRepository(Question)
       .createQueryBuilder("question")
@@ -75,6 +90,13 @@ export class QuestionService {
       .getOne();
   }
 
+  /**
+   * Met à jour une question existante.
+   * @param id Identifiant de la question
+   * @param updateQuestionDto Données de la question à mettre à jour
+   * @param connectedUser Utilisateur actuellement connecté
+   * @returns Résultat de la mise à jour de la question
+   */
   async update(
     id: string,
     updateQuestionDto: UpdateQuestionDto,

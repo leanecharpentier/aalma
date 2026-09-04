@@ -15,6 +15,12 @@ export class FormService {
     private readonly notificationService: NotificationService,
   ) {}
 
+  /**
+   * Crée un formulaire.
+   * @param createFormDto Données du formulaire à créer
+   * @param connectedUser Utilisateur connecté
+   * @returns Résultat de la création du formulaire
+   */
   async create(createFormDto: CreateFormDto, connectedUser: User) {
     try {
       const user = await AppDataSource.getRepository(User)
@@ -63,12 +69,21 @@ export class FormService {
     }
   }
 
+  /**
+   * Récupère tous les formulaires.
+   * @returns Liste de tous les formulaires
+   */
   async findAll() {
     return await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
       .getMany();
   }
 
+  /**
+   * Récupère les formulaires actuellement disponibles pour l'utilisateur connecté.
+   * @param connectedUser Utilisateur connecté
+   * @returns Liste des formulaires actuellement disponibles
+   */
   async findCurrent(connectedUser: User) {
     const user = await AppDataSource.getRepository(User)
       .createQueryBuilder("user")
@@ -88,6 +103,11 @@ export class FormService {
       .getMany();
   }
 
+  /**
+   * Récupère les utilisateurs ayant répondu à un formulaire.
+   * @param id Identifiant du formulaire
+   * @returns Liste des utilisateurs ayant répondu au formulaire
+   */
   async answeredForm(id: string) {
     const form = await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
@@ -115,6 +135,11 @@ export class FormService {
       .getMany();
   }
 
+  /**
+   * Relance les employés n'ayant pas répondu à un formulaire.
+   * @param id Identifiant du formulaire
+   * @returns Résultat de l'envoi des notifications
+   */
   async callEmployeesAgain(id: string) {
     const form = await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
@@ -154,6 +179,12 @@ export class FormService {
     return { success: true, message: "Notifications sent" };
   }
 
+  /**
+   * Récupère un formulaire à partir de son identifiant.
+   * @param id Identifiant du formulaire
+   * @param answer Indique si les réponses doivent être récupérées
+   * @returns Le formulaire correspondant
+   */
   async findOne(id: string, answer?: boolean) {
     const query = await AppDataSource.getRepository(Form)
       .createQueryBuilder("form")
@@ -170,6 +201,13 @@ export class FormService {
     return result;
   }
 
+  /**
+   * Met à jour un formulaire.
+   * @param id Identifiant du formulaire à modifier
+   * @param updateFormDto Nouvelles données du formulaire
+   * @param connectedUser Utilisateur connecté
+   * @returns Le formulaire mis à jour
+   */
   async update(id: string, updateFormDto: UpdateFormDto, connectedUser: User) {
     try {
       if (updateFormDto.name) {
@@ -192,6 +230,12 @@ export class FormService {
     }
   }
 
+  /**
+   * Supprime un formulaire à partir de son identifiant.
+   * @param id Identifiant du formulaire à supprimer
+   * @param connectedUser Utilisateur connecté
+   * @returns Résultat de la suppression du formulaire
+   */
   async remove(id: string, connectedUser: User) {
     try {
       return await AppDataSource.getRepository(Form)

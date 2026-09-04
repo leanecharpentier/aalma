@@ -11,6 +11,12 @@ import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
 export class PropositionService {
   constructor(private readonly activityLogService: ActivityLogService) {}
 
+  /**
+   * Crée une nouvelle proposition pour une question.
+   * @param createPropositionDto Données de la proposition à créer
+   * @param connectedUser Utilisateur actuellement connecté
+   * @returns Résultat de la création de la proposition
+   */
   async create(
     createPropositionDto: CreatePropositionDto,
     connectedUser: User,
@@ -57,6 +63,11 @@ export class PropositionService {
     }
   }
 
+  /**
+   * Récupère une proposition à partir de son identifiant.
+   * @param id Identifiant de la proposition
+   * @returns Proposition correspondante
+   */
   async findOne(id: string) {
     return await AppDataSource.getRepository(Proposition)
       .createQueryBuilder("proposition")
@@ -64,6 +75,13 @@ export class PropositionService {
       .getOne();
   }
 
+  /**
+   * Met à jour une proposition existante.
+   * @param id Identifiant de la proposition
+   * @param updatePropositionDto Données de la proposition à mettre à jour
+   * @param connectedUser Utilisateur actuellement connecté
+   * @returns Résultat de la mise à jour de la proposition
+   */
   async update(
     id: string,
     updatePropositionDto: UpdatePropositionDto,
@@ -87,6 +105,12 @@ export class PropositionService {
     }
   }
 
+  /**
+   * Supprime une proposition existante.
+   * @param id Identifiant de la proposition
+   * @param connectedUser Utilisateur actuellement connecté
+   * @returns Résultat de la suppression de la proposition
+   */
   async remove(id: string, connectedUser: User) {
     try {
       return await AppDataSource.getRepository(Proposition)
