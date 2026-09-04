@@ -24,6 +24,7 @@ import {
 } from "typeorm/entities/Role";
 import { KpiRecommandedActionsDto } from "./dto/kpi.recommanded-actions";
 import { ActionService } from "src/action/action.service";
+import { KpiImpactResponseDto } from "./dto/kpi.impact";
 
 @Controller("kpi")
 @ApiTags("KPI")
@@ -194,7 +195,6 @@ export class KpiController {
     };
     const factory = new KpiFactory(this.actionService);
 
-    //All KPIs in name=>value
     response.actions = await this.kpiService.recommandedActions(
       factory,
       body.startDate,
@@ -202,6 +202,71 @@ export class KpiController {
       body.companyId,
       body.teamId ?? undefined,
     );
+    return response;
+  }
+  @Post("impact")
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([
+    SUPER_ADMIN_ROLE_ID,
+    ADMIN_ROLE_ID,
+    HR_ROLE_ID,
+    MANAGER_ROLE_ID,
+    CEO_ROLE_ID,
+  ])
+  @ApiOperation({
+    summary: "Impact - évolution du score global et des KPIs les plus impactants",
+    description:
+      "Calcule le score Aalma et son évolution par rapport à la période précédente, ainsi que les 2 KPIs ayant le plus évolué (positivement ou négativement) sur la période.",
+  })
+  @ApiBody({ type: KpiDetailBodyDto })
+  @ApiResponse({
+    status: 200,
+    description: "Score global, son évolution, et les 2 KPIs les plus impactants",
+    type: KpiImpactResponseDto,
+  })
+  async impact(
+    @Body() body: {
+      startDate: Date;
+      endDate: Date;
+      companyId: string;
+      teamId?: string;
+    },
+  ) {
+    body.startDate = new Date(body.startDate);
+    body.endDate = new Date(body.endDate);
+
+    const factory = new KpiFactory(this.actionService);
+    const aalma = factory.create("aalma");
+
+    const response: KpiImpactResponseDto = {
+      aalma_score: 0,
+      evolution_score: 0,
+      top_kpis: [],
+    };
+
+    response.aalma_score = await aalma?.getCalcul(
+      body.startDate,
+      body.endDate,
+      body.companyId,
+      body.teamId ?? undefined,
+    );
+
+    const biggestEvolutions = await this.kpiService.biggestEvolution(
+      factory,
+      body.startDate,
+      body.endDate,
+      body.companyId,
+      body.teamId ?? undefined,
+    );
+    response.top_kpis = biggestEvolutions.slice(0, 2);
+
+    response.evolution_score = await aalma?.getEvolution(
+      body.startDate,
+      body.endDate,
+      body.companyId,
+      body.teamId ?? undefined,
+    );
+
     return response;
   }
 }
