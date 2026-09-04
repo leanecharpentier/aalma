@@ -5,6 +5,12 @@ import { CreateFavoriteDto } from "./dto/create-favorite.dto";
 
 @Injectable()
 export class FavoriteService {
+  /**
+   * Crée un favori pour un utilisateur.
+   * @param dto Données du favori à créer
+   * @param userId Identifiant de l'utilisateur
+   * @returns Résultat de la création du favori
+   */
   async create(dto: CreateFavoriteDto, userId: string) {
     try {
       return await AppDataSource.getRepository(Favorite)
@@ -17,6 +23,11 @@ export class FavoriteService {
     }
   }
 
+  /**
+   * Récupère tous les favoris d'un utilisateur.
+   * @param userId Identifiant de l'utilisateur
+   * @returns Liste des favoris de l'utilisateur
+   */
   async findAllForUser(userId: string) {
     return await AppDataSource.getRepository(Favorite)
       .createQueryBuilder("favorite")
@@ -25,6 +36,12 @@ export class FavoriteService {
       .getMany();
   }
 
+  /**
+   * Supprime un favori d'un utilisateur.
+   * @param availableActionId Identifiant de l'action disponible
+   * @param userId Identifiant de l'utilisateur
+   * @returns Résultat de la suppression du favori
+   */
   async remove(availableActionId: string, userId: string) {
     return await AppDataSource.getRepository(Favorite)
       .createQueryBuilder()

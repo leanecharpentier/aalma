@@ -11,6 +11,12 @@ import { ACTIVITY_FAIL } from "typeorm/entities/ActivityLog";
 export class BookedActionService {
   constructor(private readonly activityLogService: ActivityLogService) {}
 
+  /**
+   * Crée une action réservée.
+   * @param dto Données de l'action réservée à créer
+   * @param connectedUser Utilisateur connecté
+   * @returns Résultat de la création de l'action réservée
+   */
   async create(dto: CreateBookedActionDto, connectedUser: User) {
     try {
       return await AppDataSource.getRepository(BookedAction)
@@ -29,6 +35,11 @@ export class BookedActionService {
     }
   }
 
+  /**
+   * Récupère toutes les actions réservées selon les filtres fournis.
+   * @param filters Filtres à appliquer à la recherche
+   * @returns Liste des actions réservées correspondant aux filtres
+   */
   async findAll(filters: Record<string, string>) {
     const ALLOWED_FILTERS = ["action_id", "priority_id"];
     const query = AppDataSource.getRepository(BookedAction)
@@ -47,6 +58,11 @@ export class BookedActionService {
     return await query.getMany();
   }
 
+  /**
+   * Récupère une action réservée à partir de son identifiant.
+   * @param id Identifiant de l'action réservée
+   * @returns L'action réservée correspondante
+   */
   async findOne(id: string) {
     return await AppDataSource.getRepository(BookedAction)
       .createQueryBuilder("booked_action")
@@ -56,6 +72,13 @@ export class BookedActionService {
       .getOne();
   }
 
+  /**
+   * Met à jour une action réservée.
+   * @param id Identifiant de l'action réservée à modifier
+   * @param dto Nouvelles données de l'action réservée
+   * @param connectedUser Utilisateur connecté
+   * @returns Résultat de la mise à jour de l'action réservée
+   */
   async update(id: string, dto: UpdateBookedActionDto, connectedUser: User) {
     try {
       return await AppDataSource.getRepository(BookedAction)
@@ -75,6 +98,12 @@ export class BookedActionService {
     }
   }
 
+  /**
+   * Supprime une action réservée à partir de son identifiant.
+   * @param id Identifiant de l'action réservée à supprimer
+   * @param connectedUser Utilisateur connecté
+   * @returns Résultat de la suppression de l'action réservée
+   */
   async remove(id: string, connectedUser: User) {
     try {
       return await AppDataSource.getRepository(BookedAction)
@@ -93,6 +122,12 @@ export class BookedActionService {
     }
   }
 
+  /**
+   * Récupère les prochaines actions réservées d'une roadmap.
+   * @param roadmapId Identifiant de la roadmap
+   * @param limit Nombre maximum d'actions à récupérer
+   * @returns Liste des prochaines actions réservées de la roadmap
+   */
   async findNextByRoadmap(roadmapId: string, limit = 2) {
     return await AppDataSource.getRepository(BookedAction)
       .createQueryBuilder("booked_action")

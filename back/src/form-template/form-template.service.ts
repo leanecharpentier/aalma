@@ -13,6 +13,12 @@ import { Question } from "typeorm/entities/Question";
 export class FormTemplateService {
   constructor(private readonly activityLogService: ActivityLogService) {}
 
+  /**
+    Crée un nouveau modèle de formulaire avec ses questions associées.
+    @param createFormTemplateDto Données du modèle de formulaire à créer
+    @param connectedUser Utilisateur actuellement connecté
+    @returns Résultat de la création du modèle de formulaire
+  */
   async create(
     createFormTemplateDto: CreateFormTemplateDto,
     connectedUser: User,
@@ -66,12 +72,22 @@ export class FormTemplateService {
     }
   }
 
+  /**
+  Récupère tous les modèles de formulaire.
+  @returns Liste des modèles de formulaire
+  */
   async findAll() {
     return await AppDataSource.getRepository(FormTemplate)
       .createQueryBuilder("form_template")
       .getMany();
   }
 
+  /**
+
+  Récupère un modèle de formulaire avec ses questions et leurs propositions.
+  @param id Identifiant du modèle de formulaire
+  @returns Modèle de formulaire avec ses questions complètes
+  */
   async findOne(id: string) {
     const template = await AppDataSource.getRepository(FormTemplate)
       .createQueryBuilder("form_template")
@@ -92,6 +108,15 @@ export class FormTemplateService {
     return template;
   }
 
+  /**
+
+  Met à jour un modèle de formulaire et ses questions associées.
+  @param id Identifiant du modèle de formulaire
+  @param updateFormTemplateDto Données du modèle de formulaire à mettre à jour
+  @param connectedUser Utilisateur actuellement connecté
+
+  @returns Modèle de formulaire mis à jour
+  */
   async update(
     id: string,
     updateFormTemplateDto: UpdateFormTemplateDto,
@@ -142,6 +167,14 @@ export class FormTemplateService {
     }
   }
 
+  /**
+
+  Supprime un modèle de formulaire et ses associations avec les questions.
+  @param id Identifiant du modèle de formulaire
+  @param connectedUser Utilisateur actuellement connecté
+
+  @returns Résultat de la suppression du modèle de formulaire
+  */
   async remove(id: string, connectedUser: User) {
     try {
       await AppDataSource.getRepository(FormTemplateQuestion)

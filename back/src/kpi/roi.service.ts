@@ -1,4 +1,3 @@
-// kpi/roi.service.ts
 import { Injectable } from "@nestjs/common";
 import { AppDataSource } from "DataSource";
 import { BookedAction } from "typeorm/entities/BookedAction";
@@ -13,6 +12,15 @@ export const VALUE_PER_AALMA_POINT = 15;
 export class RoiService {
   constructor(private readonly actionService: ActionService) {}
 
+  /**
+   * Calcule le coût total des actions réservées sur une période donnée.
+   * @param startDate Date de début de la période
+   * @param endDate Date de fin de la période
+   * @param companyId Identifiant de l'entreprise
+   * @param teamId Identifiant de l'équipe
+   * @param actionId Identifiant de l'action
+   * @returns Coût total des actions réservées
+   */
   private async sumCost(
     startDate: Date,
     endDate: Date,
@@ -49,6 +57,12 @@ export class RoiService {
     );
   }
 
+  /**
+   * Compte le nombre d'employés d'une entreprise ou d'une équipe.
+   * @param companyId Identifiant de l'entreprise
+   * @param teamId Identifiant de l'équipe
+   * @returns Nombre d'employés
+   */
   private async countEmployees(
     companyId: string,
     teamId?: string,
@@ -65,6 +79,14 @@ export class RoiService {
     return await qb.getCount();
   }
 
+  /**
+   * Calcule le retour sur investissement global d'une entreprise ou d'une équipe.
+   * @param startDate Date de début de la période
+   * @param endDate Date de fin de la période
+   * @param companyId Identifiant de l'entreprise
+   * @param teamId Identifiant de l'équipe
+   * @returns Données du retour sur investissement global
+   */
   async getGlobalRoi(
     startDate: Date,
     endDate: Date,
@@ -115,6 +137,15 @@ export class RoiService {
   }
 
 
+  /**
+   * Calcule le retour sur investissement d'une action spécifique.
+   * @param actionId Identifiant de l'action
+   * @param startDate Date de début de la période
+   * @param endDate Date de fin de la période
+   * @param companyId Identifiant de l'entreprise
+   * @param teamId Identifiant de l'équipe
+   * @returns Données du retour sur investissement de l'action
+   */
   async getActionRoi(
     actionId: string,
     startDate: Date,

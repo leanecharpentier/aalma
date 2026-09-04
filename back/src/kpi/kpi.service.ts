@@ -17,6 +17,16 @@ export class KpiService {
     "workbalance",
     "commitment",
   ];
+
+  /**
+   * Calcule tous les KPI disponibles pour une période donnée.
+   * @param factory Fabrique permettant de créer les KPI
+   * @param startDate Date de début de la période
+   * @param endDate Date de fin de la période
+   * @param companyId Identifiant de l'entreprise
+   * @param teamId Identifiant de l'équipe
+   * @returns Scores des différents KPI
+   */
   async allKPI(
     factory: KpiFactory,
     startDate: Date,
@@ -41,6 +51,15 @@ export class KpiService {
     return scores;
   }
   
+  /**
+   * Récupère les actions recommandées en fonction des KPI.
+   * @param factory Fabrique permettant de créer les KPI
+   * @param startDate Date de début de la période
+   * @param endDate Date de fin de la période
+   * @param companyId Identifiant de l'entreprise
+   * @param teamId Identifiant de l'équipe
+   * @returns Liste des actions recommandées
+   */
   async recommandedActions(
     factory: KpiFactory,
     startDate: Date,
@@ -65,6 +84,13 @@ export class KpiService {
     return actions;
   }
 
+  /**
+   * Récupère les trois équipes ayant les scores les plus faibles.
+   * @param startDate Date de début de la période
+   * @param endDate Date de fin de la période
+   * @param companyId Identifiant de l'entreprise
+   * @returns Liste des équipes avec leur score
+   */
   async worstTeam(
     startDate: Date,
     endDate: Date,
@@ -85,6 +111,17 @@ export class KpiService {
     return worst_team.splice(0, 3);
   }
 
+  /**
+   * Récupère les trois KPI ayant connu la plus grande évolution entre deux périodes.
+   * @param factory Fabrique permettant de créer les KPI
+   * @param startDate Date de début de la période actuelle
+   * @param endDate Date de fin de la période actuelle
+   * @param companyId Identifiant de l'entreprise
+   * @param teamId Identifiant de l'équipe
+   * @param previousStartDate Date de début de la période précédente
+   * @param previousEndDate Date de fin de la période précédente
+   * @returns Liste des KPI triés par importance de leur évolution
+   */
   async biggestEvolution(
     factory: KpiFactory,
     startDate: Date,

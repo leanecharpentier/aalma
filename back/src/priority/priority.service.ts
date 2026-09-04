@@ -6,6 +6,11 @@ import { Roadmap } from "typeorm/entities/Rodmap";
 
 @Injectable()
 export class PriorityService {
+  /**
+   * Récupère les priorités d'une roadmap d'équipe ou de la roadmap globale.
+   * @param teamId Identifiant de l'équipe
+   * @returns Liste des priorités associées à la roadmap
+   */
   async findAll(teamId?: string) {
     const roadmapRepo = AppDataSource.getRepository(Roadmap);
 

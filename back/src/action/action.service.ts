@@ -13,6 +13,12 @@ import { Review } from "typeorm/entities/Review";
 export class ActionService {
   constructor(private readonly activityLogService: ActivityLogService) {}
 
+  /**
+   * Crée une nouvelle action.
+   * @param createActionDto Données de l'action à créer
+   * @param connectedUser Utilisateur connecté à l'origine de la création
+   * @returns Résultat de la tentative de création
+   */
   async create(createActionDto: CreateActionDto, connectedUser: User) {
     try {
       const result = await AppDataSource.getRepository(Action)
@@ -32,6 +38,12 @@ export class ActionService {
     }
   }
 
+  /**
+   * Récupère la liste des actions selon des filtres optionnels.
+   * @param filters Filtres à appliquer sur la recherche des actions
+   * @param userId Identifiant de l'utilisateur connecté, utilisé pour déterminer les favoris
+   * @returns Liste des actions correspondant aux filtres
+   */
   async findAll(filters: Record<string, string>, userId?: string) {
     const EXACT_FILTERS = ["category_id", "format_id", "company_id", "speaker_id"];
     const TEXT_FILTERS = ["title", "price"];
@@ -105,6 +117,11 @@ export class ActionService {
     }));
   }
 
+  /**
+   * Récupère une action brute par son identifiant, sans jointures ni enrichissement.
+   * @param id Identifiant de l'action
+   * @returns Action correspondante ou null si elle n'existe pas
+   */
   async findOneRaw(id: string): Promise<Action | null> {
     return await AppDataSource.getRepository(Action)
       .createQueryBuilder("action")
@@ -112,6 +129,12 @@ export class ActionService {
       .getOne();
   }
 
+  /**
+   * Récupère une action par son identifiant, enrichie de ses statistiques d'avis.
+   * @param id Identifiant de l'action
+   * @param userId Identifiant de l'utilisateur connecté, utilisé pour déterminer le favori
+   * @returns Action correspondante avec ses statistiques, ou null si elle n'existe pas
+   */
   async findOne(id: string, userId?: string) {
     const query = AppDataSource.getRepository(Action)
       .createQueryBuilder("action")
@@ -168,6 +191,13 @@ export class ActionService {
     };
   }
 
+  /**
+   * Met à jour une action existante.
+   * @param id Identifiant de l'action à mettre à jour
+   * @param updateActionDto Données de mise à jour de l'action
+   * @param connectedUser Utilisateur connecté à l'origine de la mise à jour
+   * @returns Résultat de la tentative de mise à jour
+   */
   async update(
     id: string,
     updateActionDto: UpdateActionDto,
@@ -192,6 +222,12 @@ export class ActionService {
     }
   }
 
+  /**
+   * Supprime une action.
+   * @param id Identifiant de l'action à supprimer
+   * @param connectedUser Utilisateur connecté à l'origine de la suppression
+   * @returns Résultat de la tentative de suppression
+   */
   async remove(id: string, connectedUser: User) {
     try {
       return await AppDataSource.getRepository(Action)
